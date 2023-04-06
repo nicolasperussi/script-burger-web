@@ -82,15 +82,13 @@ function DeliveryVisualizer({ delivery }: DeliveryVisualizerProps) {
 				<div className="flex flex-col gap-3">
 					<Button
 						title="Próximo passo"
-						type="fill"
-						color="orange"
+						variant="fill_orange"
 						onClick={() => {}}
 						size="xl"
 					/>
 					<Button
 						title="Cancelar pedido"
-						type="secondary"
-						color="red"
+						variant="text_red"
 						onClick={() => handleToggleModal(true)}
 						size="xl"
 					/>

@@ -165,15 +165,13 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
 														<div className="flex flex-col gap-3">
 															<Button
 																title="Finalizar pedido"
-																type="fill"
-																color="orange"
+																variant="fill_orange"
 																onClick={() => toggleClientOpen(true)}
 																size="xl"
 															/>
 															<Button
 																title="Cancelar pedido"
-																type="secondary"
-																color="red"
+																variant="text_red"
 																onClick={() => handleToggleModal(true)}
 																size="xl"
 															/>

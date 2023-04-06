@@ -112,8 +112,7 @@ function ProductModal({
 												handleToggleOverlay(false);
 												handleResetQuantity();
 											}}
-											type="fill"
-											color="orange"
+											variant="fill_orange"
 											size="xl"
 											title="Adicionar ao carrinho"
 										/>

@@ -35,20 +35,16 @@ function Orders() {
 					<h1 className="text-3xl mb-5 font-bold">Pedidos</h1>
 					<div className="mb-5 flex flex-row gap-5">
 						<Button
-							type={viewDeliveries ? 'secondary' : 'fill'}
+							variant={viewDeliveries ? 'text_orange' : 'fill_orange'}
 							title="Comer no local"
-							color="orange"
 							size="md"
 							onClick={() => setViewDeliveries(false)}
-							className={viewDeliveries ? 'hover:text-orange-300' : ''}
 						/>
 						<Button
-							type={viewDeliveries ? 'fill' : 'secondary'}
+							variant={viewDeliveries ? 'fill_orange' : 'text_orange'}
 							title="Entregas"
-							color="orange"
 							size="md"
 							onClick={() => setViewDeliveries(true)}
-							className={viewDeliveries ? 'fill' : 'hover:text-orange-300'}
 						/>
 					</div>
 					{viewDeliveries

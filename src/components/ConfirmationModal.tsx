@@ -81,20 +81,16 @@ function ConfirmationModal({
 								</div>
 								<div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse gap-3 sm:px-6">
 									<Button
-										className="mt-3 inline-flex w-full sm:w-auto"
 										title={confirmTitle}
 										onClick={confirmFunction}
-										type="fill"
 										size="sm"
-										color="red"
+										variant="fill_red"
 									/>
 									<Button
-										className="mt-3 inline-flex w-full sm:w-auto"
 										title={cancelTitle}
 										onClick={() => handleToggleModal(false)}
-										type="secondary"
 										size="sm"
-										color="stone"
+										variant="text_stone"
 									/>
 								</div>
 							</Dialog.Panel>
