@@ -43,7 +43,9 @@ function Button({ variant, size = 'md', title, onClick }: ButtonProps) {
 
 	const variants = {
 		fill_red: 'bg-red-600 text-white hover:bg-red-500 shadow-sm',
+		fill_green: 'bg-green-600 text-white hover:bg-green-500 shadow-sm',
 		fill_orange: 'bg-orange-600 text-white hover:bg-orange-500 shadow-sm',
+		fill_amber: 'bg-amber-600 text-white hover:bg-amber-500 shadow-sm',
 		outline_red:
 			'border border-red-500 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600 shadow-sm',
 		outline_orange:

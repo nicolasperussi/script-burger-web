@@ -52,7 +52,7 @@ function OrderVisualizer({ order }: OrderVisualizerProps) {
 				}?`}
 				cancelTitle="Voltar"
 				confirmTitle="Próximo passo"
-				icon="alert"
+				icon="warning"
 				confirmFunction={() => {
 					api
 						.patch(`/order/${order!.id}`, {

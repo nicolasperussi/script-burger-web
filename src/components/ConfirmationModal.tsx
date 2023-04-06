@@ -1,6 +1,10 @@
 import { Fragment, useRef, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import {
+	ExclamationTriangleIcon,
+	QuestionMarkCircleIcon,
+	CheckBadgeIcon,
+} from '@heroicons/react/24/outline';
 import Button from './subcomponents/button.components';
 
 type ConfirmationModalProps = {
@@ -8,7 +12,7 @@ type ConfirmationModalProps = {
 	handleToggleModal: (state: boolean) => void;
 	title: string;
 	message: string;
-	icon: 'success' | 'alert';
+	icon: 'success' | 'alert' | 'warning';
 	confirmFunction: () => void;
 	cancelTitle: string;
 	confirmTitle: string;
@@ -60,12 +64,23 @@ function ConfirmationModal({
 							<Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 								<div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
 									<div className="sm:flex sm:items-start">
-										<div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+										{icon === 'alert' ? (
 											<ExclamationTriangleIcon
-												className="h-6 w-6 text-red-600"
+												className="h-12 w-12 text-red-600"
 												aria-hidden="true"
 											/>
-										</div>
+										) : icon === 'warning' ? (
+											<QuestionMarkCircleIcon
+												className="h-12 w-12 text-amber-600"
+												aria-hidden="true"
+											/>
+										) : (
+											<CheckBadgeIcon
+												className="h-12 w-12 text-green-600"
+												aria-hidden="true"
+											/>
+										)}
+
 										<div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
 											<Dialog.Title
 												as="h3"
@@ -84,7 +99,13 @@ function ConfirmationModal({
 										title={confirmTitle}
 										onClick={confirmFunction}
 										size="sm"
-										variant="fill_red"
+										variant={
+											icon === 'alert'
+												? 'fill_red'
+												: icon === 'warning'
+												? 'fill_amber'
+												: 'fill_green'
+										}
 									/>
 									<Button
 										title={cancelTitle}
