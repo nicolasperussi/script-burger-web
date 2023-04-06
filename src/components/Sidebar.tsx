@@ -39,8 +39,6 @@ function Sidebar() {
 			? deliveries!.length + orders!.length
 			: 0;
 
-	console.log(totalOrdersNumber);
-
 	return (
 		<nav className="h-[100vh] flex flex-col justify-between items-center py-5 w-32 bg-white">
 			<div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full bg-orange-50 cursor-pointer select-none">

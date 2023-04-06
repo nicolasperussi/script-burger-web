@@ -1,6 +1,6 @@
-import React, { createContext, ReactNode } from 'react';
-import { useFetch } from '../hooks/useFetch';
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import { IProduct } from '../types/IProduct';
+import { api } from '../services/api';
 
 type ProductContextType = {
 	products: IProduct[] | null | undefined;
@@ -17,10 +17,18 @@ export const ProductContext = createContext<ProductContextType>({
 });
 
 function ProductProvider({ children }: ProductProviderProps) {
-	const { data, isFetching } = useFetch<IProduct[]>('/product');
+	const [products, setProducts] = useState<IProduct[]>([]);
+	const [isFetching, setIsFetching] = useState(false);
+
+	useEffect(() => {
+		api
+			.get('/product')
+			.then((response) => setProducts(response.data))
+			.finally(() => setIsFetching(false));
+	}, []);
 
 	return (
-		<ProductContext.Provider value={{ products: data, isFetching }}>
+		<ProductContext.Provider value={{ products, isFetching }}>
 			{children}
 		</ProductContext.Provider>
 	);
