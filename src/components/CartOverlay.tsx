@@ -249,25 +249,23 @@ function GetClientName({ isOpen, toggleModal, closeCart }: GetClientNameProps) {
 										</div>
 									</div>
 								</div>
-								<div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-									<button
-										type="button"
-										className="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 sm:ml-3 sm:w-auto"
+								<div className="bg-gray-50 px-4 py-3 gap-3 sm:flex sm:flex-row-reverse sm:px-6">
+									<Button
+										title="Finalizar pedido"
+										variant="fill_orange"
+										size="sm"
 										onClick={() => {
 											placeOrder();
 											toggleModal(false);
 											closeCart();
 										}}
-									>
-										Finalizar pedido
-									</button>
-									<button
-										type="button"
-										className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+									/>
+									<Button
+										title="Cancelar"
+										variant="text_stone"
+										size="sm"
 										onClick={() => toggleModal(false)}
-									>
-										Cancelar
-									</button>
+									/>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>
