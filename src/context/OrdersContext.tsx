@@ -9,6 +9,8 @@ type OrderContextType = {
 	deliveries: IDelivery[] | null | undefined;
 	isFetchingOrders: boolean;
 	isFetchingDeliveries: boolean;
+	handleSetOrders(orders: IOrder[]): void;
+	handleSetDeliveries(deliveries: IDelivery[]): void;
 };
 
 type ProductProviderProps = {
@@ -20,14 +22,24 @@ export const OrderContext = createContext<OrderContextType>({
 	deliveries: [],
 	isFetchingOrders: true,
 	isFetchingDeliveries: true,
+	handleSetOrders: (orders: IOrder[]) => {},
+	handleSetDeliveries: (deliveries: IDelivery[]) => {},
 });
 
 function OrderProvider({ children }: ProductProviderProps) {
 	const [orders, setOrders] = useState<IOrder[]>([]);
 	const [isFetchingOrders, setIsFetchingOrders] = useState(true);
 
+	function handleSetOrders(orders: IOrder[]) {
+		setOrders(orders);
+	}
+
 	const [deliveries, setDeliveries] = useState<IDelivery[]>([]);
 	const [isFetchingDeliveries, setIsFetchingDeliveries] = useState(true);
+
+	function handleSetDeliveries(deliveries: IDelivery[]) {
+		setDeliveries(deliveries);
+	}
 
 	useEffect(() => {
 		api
@@ -53,7 +65,14 @@ function OrderProvider({ children }: ProductProviderProps) {
 
 	return (
 		<OrderContext.Provider
-			value={{ orders, deliveries, isFetchingOrders, isFetchingDeliveries }}
+			value={{
+				orders,
+				deliveries,
+				isFetchingOrders,
+				isFetchingDeliveries,
+				handleSetOrders,
+				handleSetDeliveries,
+			}}
 		>
 			{children}
 		</OrderContext.Provider>

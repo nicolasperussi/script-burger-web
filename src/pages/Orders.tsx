@@ -26,6 +26,11 @@ function Orders() {
 		setVisualizeDelivery(delivery);
 	}
 
+	function handleResetVisualizer() {
+		setVisualizeDelivery(null);
+		setVisualizeOrder(null);
+	}
+
 	const [viewDeliveries, setViewDeliveries] = useState(false);
 
 	if (!isFetchingOrders && !isFetchingDeliveries)
@@ -60,7 +65,10 @@ function Orders() {
 						  ))}
 				</div>
 				{visualizeOrder ? (
-					<OrderVisualizer order={visualizeOrder} />
+					<OrderVisualizer
+						order={visualizeOrder}
+						handleResetVisualizer={handleResetVisualizer}
+					/>
 				) : visualizeDelivery ? (
 					<DeliveryVisualizer delivery={visualizeDelivery} />
 				) : (

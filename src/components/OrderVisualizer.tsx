@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { BRL } from '../services/utils';
 import { IOrder } from '../types/IOrder';
 import Button from './subcomponents/button.components';
 import ConfirmationModal from './ConfirmationModal';
 import { api } from '../services/api';
+import { OrderContext } from '../context/OrdersContext';
 
 type OrderVisualizerProps = {
 	order?: IOrder | null;
+	handleResetVisualizer: () => void;
 };
 
-function OrderVisualizer({ order }: OrderVisualizerProps) {
+function OrderVisualizer({
+	order,
+	handleResetVisualizer,
+}: OrderVisualizerProps) {
+	const { orders, handleSetOrders } = useContext(OrderContext);
+
 	// Delete order confirmation
 	const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 	function handleToggleDeleteModal(state: boolean) {
@@ -37,7 +44,11 @@ function OrderVisualizer({ order }: OrderVisualizerProps) {
 				confirmFunction={() => {
 					api
 						.delete(`/order/${order!.id}`)
-						.then(() => window.location.reload());
+						.then(() =>
+							handleSetOrders(
+								orders!.filter((orderObj) => orderObj.id !== order!.id)
+							)
+						);
 					handleToggleDeleteModal(false);
 				}}
 				handleToggleModal={handleToggleDeleteModal}
@@ -58,7 +69,24 @@ function OrderVisualizer({ order }: OrderVisualizerProps) {
 						.patch(`/order/${order!.id}`, {
 							status: order!.status === 'WAITING' ? 'IN_PRODUCTION' : 'DONE',
 						})
-						.then(() => window.location.reload());
+						.then(() => {
+							{
+								handleSetOrders(
+									orders!.map((orderObj) =>
+										orderObj.id === order!.id
+											? {
+													...orderObj,
+													status:
+														order!.status === 'WAITING'
+															? 'IN_PRODUCTION'
+															: 'DONE',
+											  }
+											: orderObj
+									)
+								);
+								handleResetVisualizer();
+							}
+						});
 					handleToggleNextStepModal(false);
 				}}
 				handleToggleModal={handleToggleNextStepModal}
