@@ -10,30 +10,58 @@ type OrderVisualizerProps = {
 };
 
 function OrderVisualizer({ order }: OrderVisualizerProps) {
+	// Delete order confirmation
 	const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
-	function handleToggleModal(state: boolean) {
+	function handleToggleDeleteModal(state: boolean) {
 		setShowConfirmationModal(state);
+	}
+
+	const [showNextStepModal, setShowNextStepModal] = useState(false);
+	function handleToggleNextStepModal(state: boolean) {
+		setShowNextStepModal(state);
 	}
 
 	return (
 		<div className="flex flex-col bg-white rounded-3xl p-5 basis-[400px] h-full gap-5">
 			<ConfirmationModal
 				isOpen={showConfirmationModal}
-				title="Cancelar pedido"
-				message={`Deseja mesmo cancelar o pedido #${order!.id
+				title={order!.status === 'DONE' ? 'Apagar pedido' : 'Cancelar pedido'}
+				message={`Deseja mesmo ${
+					order!.status === 'DONE' ? 'apagar' : 'cancelar'
+				} o pedido #${order!.id
 					.split('-')[0]
 					.toUpperCase()}? Esta ação é irreversível.`}
 				cancelTitle="Voltar"
-				confirmTitle="Cancelar"
+				confirmTitle={order!.status === 'DONE' ? 'Apagar' : 'Cancelar'}
 				icon="alert"
 				confirmFunction={() => {
 					api
 						.delete(`/order/${order!.id}`)
 						.then(() => window.location.reload());
-					handleToggleModal(false);
+					handleToggleDeleteModal(false);
 				}}
-				handleToggleModal={handleToggleModal}
+				handleToggleModal={handleToggleDeleteModal}
+			/>
+			<ConfirmationModal
+				isOpen={showNextStepModal}
+				title="Próximo passo"
+				message={`Deseja mudar o status do pedido #${order!.id
+					.split('-')[0]
+					.toUpperCase()} para ${
+					order!.status === 'WAITING' ? '"Em produção"' : '"Finalizado"'
+				}?`}
+				cancelTitle="Voltar"
+				confirmTitle="Próximo passo"
+				icon="alert"
+				confirmFunction={() => {
+					api
+						.patch(`/order/${order!.id}`, {
+							status: order!.status === 'WAITING' ? 'IN_PRODUCTION' : 'DONE',
+						})
+						.then(() => window.location.reload());
+					handleToggleNextStepModal(false);
+				}}
+				handleToggleModal={handleToggleNextStepModal}
 			/>
 			<header className="flex flex-row justify-between gap-5">
 				<div className="">
@@ -81,16 +109,20 @@ function OrderVisualizer({ order }: OrderVisualizerProps) {
 					<h1 className="font-semibold">{BRL(order?.totalPrice!)}</h1>
 				</div>
 				<div className="flex flex-col gap-3">
+					{!(order!.status === 'DONE') && (
+						<Button
+							title="Próximo passo"
+							variant="fill_orange"
+							onClick={() => handleToggleNextStepModal(true)}
+							size="xl"
+						/>
+					)}
 					<Button
-						title="Próximo passo"
-						variant="fill_orange"
-						onClick={() => {}}
-						size="xl"
-					/>
-					<Button
-						title="Cancelar pedido"
-						variant="text_red"
-						onClick={() => handleToggleModal(true)}
+						title={
+							order!.status === 'DONE' ? 'Apagar pedido' : 'Cancelar pedido'
+						}
+						variant={order!.status === 'DONE' ? 'fill_red' : 'text_red'}
+						onClick={() => handleToggleDeleteModal(true)}
 						size="xl"
 					/>
 				</div>
