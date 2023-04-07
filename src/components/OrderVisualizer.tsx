@@ -49,6 +49,7 @@ function OrderVisualizer({
 								orders!.filter((orderObj) => orderObj.id !== order!.id)
 							)
 						);
+					handleResetVisualizer();
 					handleToggleDeleteModal(false);
 				}}
 				handleToggleModal={handleToggleDeleteModal}
@@ -84,9 +85,9 @@ function OrderVisualizer({
 											: orderObj
 									)
 								);
-								handleResetVisualizer();
 							}
 						});
+					handleResetVisualizer();
 					handleToggleNextStepModal(false);
 				}}
 				handleToggleModal={handleToggleNextStepModal}

@@ -15,19 +15,19 @@ function Product({
 }: ProductProps) {
 	return (
 		<div
-			className="flex flex-col items-center gap-2 p-5 bg-white rounded-2xl cursor-pointer select-none"
+			className="flex flex-col gap-2 cursor-pointer select-none"
 			onClick={() => {
 				handleViewProduct(product);
 				handleToggleOverlay(true);
 			}}
 		>
 			<img
-				className="w-full h-[150px] object-cover rounded-xl"
+				className="w-full h-[250px] object-cover"
 				src={`http://localhost:3003/images/${product.slug}.jpg`}
 				alt=""
 			/>
-			<p className="text-center">{product.name}</p>
-			<p>{BRL(product.price)}</p>
+			<p className="text-lg text-neutral-700">{product.name}</p>
+			<p className="text-2xl font-medium">{BRL(product.price)}</p>
 		</div>
 	);
 }

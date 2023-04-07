@@ -1,14 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
 import Cart from '../components/Cart';
 import Product from '../components/Product';
 import ProductModal from '../components/ProductModal';
 import { ProductContext } from '../context/ProductContext';
 import { IProduct } from '../types/IProduct';
+import Button from '../components/subcomponents/button.components';
 
 function Products() {
 	const { products, isFetching } = useContext(ProductContext);
-	const params = useParams();
 
 	const [viewProduct, setViewProduct] = useState<IProduct>({
 		id: 'fake',
@@ -30,14 +29,42 @@ function Products() {
 		setViewProduct(product);
 	}
 
+	const [category, setCategory] = useState('sandwich');
+
 	return (
 		<div className="h-full">
 			<Cart />
-			<h1 className="text-3xl mb-10 font-bold">Produtos</h1>
-			<div className="grid md:grid-cols-3 lg:grid-cols-4 gap-5 overflow-y-auto">
+			<h1 className="text-3xl mb-5 font-bold">Produtos</h1>
+			<div className="mb-5 flex flex-row gap-5">
+				<Button
+					variant={category === 'sandwich' ? 'fill_orange' : 'text_orange'}
+					title="🥪 Sanduiches"
+					size="md"
+					onClick={() => setCategory('sandwich')}
+				/>
+				<Button
+					variant={category === 'side' ? 'fill_orange' : 'text_orange'}
+					title="🍟 Acompanhamentos"
+					size="md"
+					onClick={() => setCategory('side')}
+				/>
+				<Button
+					variant={category === 'drink' ? 'fill_orange' : 'text_orange'}
+					title="🥤 Bebidas"
+					size="md"
+					onClick={() => setCategory('drink')}
+				/>
+				<Button
+					variant={category === 'dessert' ? 'fill_orange' : 'text_orange'}
+					title="🍰 Sobremesas"
+					size="md"
+					onClick={() => setCategory('dessert')}
+				/>
+			</div>
+			<div className="grid grid-cols-[repeat(auto-fill,250px)] gap-10 overflow-y-auto">
 				{!isFetching &&
 					products
-						?.filter((product) => product.category.name === params.category)
+						?.filter((product) => product.category.name === category)
 						.map((product) => (
 							<Product
 								key={product.id}

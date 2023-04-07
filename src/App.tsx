@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Categories from './pages/Categories';
 import Orders from './pages/Orders';
 import Products from './pages/Products';
 import Root from './pages/Root';
@@ -22,10 +21,6 @@ function App() {
 				},
 				{
 					path: 'products',
-					element: <Categories />,
-				},
-				{
-					path: 'products/:category',
 					element: <Products />,
 				},
 				{

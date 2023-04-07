@@ -66,7 +66,7 @@ function ProductModal({
 							leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 						>
 							<Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all max-w-screen-md">
-								<div className="flex flex-col bg-white shadow-xl">
+								<div className="flex flex-col bg-white min-w-[768px] shadow-xl">
 									<img
 										className="h-[400px] w-full object-cover"
 										src={`http://localhost:3003/images/${product.slug}.jpg`}
