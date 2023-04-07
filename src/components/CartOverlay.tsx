@@ -1,11 +1,13 @@
 import { Fragment, useContext, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, MinusIcon } from '@heroicons/react/24/outline';
 import { BRL } from '../services/utils';
 import { CartContext } from '../context/CartContext';
 import { IProduct } from '../types/IProduct';
 import Button from './subcomponents/button.components';
 import ConfirmationModal from './ConfirmationModal';
+import EmptyCart from '../assets/empty_cart.png';
+import { toast } from 'react-toastify';
 
 type CartOverlayProps = {
 	showOverlay: boolean;
@@ -18,7 +20,7 @@ type ProductCartType = {
 };
 
 function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
-	const { products, clear } = useContext(CartContext);
+	const { products, clear, removeFromCart } = useContext(CartContext);
 	const totalPrice = products
 		.map((product) => product.product.price * product.quantity)
 		.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
@@ -57,6 +59,16 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
 					clear();
 					closeCart();
 					handleToggleModal(false);
+					toast.success('Carrinho limpo!', {
+						position: 'bottom-center',
+						autoClose: 3000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: 'light',
+					});
 				}}
 				handleToggleModal={handleToggleModal}
 			/>
@@ -113,8 +125,11 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
 										</Transition.Child>
 										<div className="flex h-screen flex-col bg-white py-6 shadow-xl">
 											{products.length < 1 ? (
-												<div className="h-full w-full flex items-center justify-center">
-													Carrinho vazio
+												<div className="h-full w-full flex flex-col justify-center items-center">
+													<img src={EmptyCart} alt="" />
+													<h1 className="text-center p-5 text-neutral-500">
+														Adicione produtos ao seu pedido para ve-los aqui!
+													</h1>
 												</div>
 											) : (
 												<div className="flex flex-col bg-white rounded-3xl p-5 h-full gap-5">
@@ -131,9 +146,26 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
 																		alt=""
 																	/>
 																	<div className="flex flex-col flex-1 gap-3">
-																		<h1 className="text-lg font-semibold">
+																		<div className="text-lg font-semibold flex justify-between items-center">
 																			{cartProduct.product.name}
-																		</h1>
+																			{cartProduct.quantity > 1 ? (
+																				<MinusIcon
+																					onClick={() =>
+																						removeFromCart(cartProduct)
+																					}
+																					className="h-6 w-6 text-red-500 cursor-pointer"
+																					aria-hidden="true"
+																				/>
+																			) : (
+																				<XMarkIcon
+																					onClick={() =>
+																						removeFromCart(cartProduct)
+																					}
+																					className="h-6 w-6 text-red-500 cursor-pointer"
+																					aria-hidden="true"
+																				/>
+																			)}
+																		</div>
 																		<div className="flex justify-between">
 																			<div className="flex gap-10 items-center">
 																				<p className="">

@@ -1,6 +1,8 @@
 import React, { createContext, ReactNode, useState } from 'react';
 import { api } from '../services/api';
 import { IProduct } from '../types/IProduct';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type CartProviderProps = {
 	children: ReactNode;
@@ -52,15 +54,32 @@ function CartProvider({ children }: CartProviderProps) {
 	const [clientName, setClientName] = useState<string>('');
 
 	function addToCart(product: ProductCartType) {
-		setProducts((prev) => [...prev, product]);
+		if (
+			products.find((p: ProductCartType) => p.product.id === product.product.id)
+		) {
+			const index = products.findIndex(
+				(p) => p.product.id === product.product.id
+			);
+			const updatedProducts = [...products];
+			updatedProducts[index].quantity += product.quantity;
+			return setProducts(updatedProducts);
+		}
+		return setProducts((prev) => [...prev, product]);
 	}
 
 	function removeFromCart(productToRemove: ProductCartType) {
-		setProducts(
-			products.filter(
-				(product) => product.product.id !== productToRemove.product.id
-			)
+		const index = products.findIndex(
+			(p) => p.product.id === productToRemove.product.id
 		);
+		let updatedProducts = [...products];
+		if (updatedProducts[index].quantity > 1) {
+			updatedProducts[index].quantity -= 1;
+		} else {
+			updatedProducts = updatedProducts.filter(
+				(p) => p.product.id !== productToRemove.product.id
+			);
+		}
+		setProducts(updatedProducts);
 	}
 
 	function clear() {
@@ -77,6 +96,16 @@ function CartProvider({ children }: CartProviderProps) {
 				productList: products,
 			})
 			.then(() => {
+				toast.success('Pedido criado com sucesso!', {
+					position: 'bottom-center',
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: 'light',
+				});
 				clear();
 				setClientName('');
 			});
@@ -95,6 +124,7 @@ function CartProvider({ children }: CartProviderProps) {
 			}}
 		>
 			{children}
+			<ToastContainer />
 		</CartContext.Provider>
 	);
 }
