@@ -1,45 +1,41 @@
-import React from 'react';
+import React from "react";
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Orders from './pages/Orders';
-import Products from './pages/Products';
-import Root from './pages/Root';
-import ProductProvider from './context/ProductContext';
-import CartProvider from './context/CartContext';
-import OrderProvider from './context/OrdersContext';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Orders from "./pages/Orders";
+import Products from "./pages/Products";
+import Root from "./pages/Root";
+import ProductProvider from "./context/ProductContext";
+import CartProvider from "./context/CartContext";
+import OrderProvider from "./context/OrdersContext";
 
 function App() {
-	const router = createBrowserRouter([
-		{
-			path: '/',
-			element: <Root />,
-			errorElement: <div>404 not found!</div>,
-			children: [
-				{
-					path: 'orders',
-					element: <Orders />,
-				},
-				{
-					path: 'products',
-					element: <Products />,
-				},
-				{
-					path: 'settings',
-					element: <div>Settings</div>,
-				},
-			],
-		},
-	]);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Root />,
+      errorElement: <div>404 not found!</div>,
+      children: [
+        {
+          path: "orders",
+          element: <Orders />,
+        },
+        {
+          path: "products",
+          element: <Products />,
+        },
+      ],
+    },
+  ]);
 
-	return (
-		<OrderProvider>
-			<ProductProvider>
-				<CartProvider>
-					<RouterProvider router={router} />
-				</CartProvider>
-			</ProductProvider>
-		</OrderProvider>
-	);
+  return (
+    <OrderProvider>
+      <ProductProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </ProductProvider>
+    </OrderProvider>
+  );
 }
 
 export default App;

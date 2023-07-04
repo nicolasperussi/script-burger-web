@@ -27,7 +27,6 @@ function Root() {
 					initial={{ opacity: 0, y: 200 }}
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: -200 }}
-					transition={{duration: 0.1}}
 					className="p-10 w-full h-screen"
 				>
 					<AnimatedOutlet />
