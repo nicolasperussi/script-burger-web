@@ -1,6 +1,7 @@
 import React from 'react';
 import { BRL } from '../services/utils';
 import { IOrder } from '../types/IOrder';
+import { motion } from 'framer-motion';
 
 type OrderProps = {
 	order: IOrder;
@@ -20,7 +21,12 @@ function getOrderStatus(orderStatus: string): {
 
 function Order({ order, setVisualizeOrder }: OrderProps) {
 	return (
-		<div
+		<motion.div
+			layout
+			initial={{ scale: 0.8, opacity: 0 }}
+			animate={{ scale: 1, opacity: 1 }}
+			exit={{ scale: 0.8, opacity: 0 }}
+			transition={{type: 'spring', stiffness: 500, damping: 50, mass: 1}}
 			className="mb-3 bg-white p-5 rounded-3xl flex flex-row justify-between items-center cursor-pointer select-none"
 			onClick={() => setVisualizeOrder(order)}
 		>
@@ -50,7 +56,7 @@ function Order({ order, setVisualizeOrder }: OrderProps) {
 					</span>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
 

@@ -43,24 +43,24 @@ function OrderVisualizer({
 				confirmTitle={order!.status === 'DONE' ? 'Apagar' : 'Cancelar'}
 				icon="alert"
 				confirmFunction={() => {
-					api.delete(`/order/${order!.id}`).then(() => {
-						handleSetOrders(
-							orders!.filter((orderObj) => orderObj.id !== order!.id)
-						);
-						toast.success(
-							`Pedido #${order!.id.split('-')[0].toUpperCase()} apagado!`,
-							{
-								position: 'bottom-center',
-								autoClose: 3000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								progress: undefined,
-								theme: 'light',
-							}
-						);
-					});
+					api.delete(`/order/${order!.id}`);
+					const newOrders = orders!.filter((orderObj) => orderObj.id !== order!.id)
+					handleSetOrders(
+						newOrders
+					);
+					toast.success(
+						`Pedido #${order!.id.split('-')[0].toUpperCase()} apagado!`,
+						{
+							position: 'bottom-center',
+							autoClose: 3000,
+							hideProgressBar: false,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+							theme: 'light',
+						}
+					);
 					handleResetVisualizer();
 					handleToggleDeleteModal(false);
 				}}

@@ -6,6 +6,8 @@ import { ProductContext } from '../context/ProductContext';
 import { IProduct } from '../types/IProduct';
 import Button from '../components/subcomponents/button.components';
 
+import {motion} from 'framer-motion';
+
 function Products() {
 	const { products, isFetching } = useContext(ProductContext);
 

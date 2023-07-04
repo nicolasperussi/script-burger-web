@@ -1,6 +1,7 @@
 import React from 'react';
 import { BRL } from '../services/utils';
 import { IDelivery } from '../types/IDelivery';
+import { motion } from 'framer-motion';
 
 type DeliveryProps = {
 	delivery: IDelivery;
@@ -22,7 +23,12 @@ function getDeliveryStatus(orderStatus: string): {
 
 function Delivery({ delivery, setVisualizeDelivery }: DeliveryProps) {
 	return (
-		<div
+		<motion.div
+			layout
+			initial={{ scale: 0.8, opacity: 0 }}
+			animate={{ scale: 1, opacity: 1 }}
+			exit={{ scale: 0.8, opacity: 0 }}
+			transition={{ type: "spring" }}
 			className="mb-3 bg-white p-5 rounded-3xl flex flex-row justify-between items-center cursor-pointer select-none"
 			onClick={() => setVisualizeDelivery(delivery)}
 		>
@@ -52,7 +58,7 @@ function Delivery({ delivery, setVisualizeDelivery }: DeliveryProps) {
 					</span>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
 

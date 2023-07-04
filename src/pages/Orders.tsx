@@ -9,6 +9,7 @@ import Button from '../components/subcomponents/button.components';
 import Delivery from '../components/Delivery';
 import { IDelivery } from '../types/IDelivery';
 import DeliveryVisualizer from '../components/DeliveryVisualizer';
+import { AnimatePresence } from 'framer-motion';
 
 function Orders() {
 	const { orders, isFetchingOrders, deliveries, isFetchingDeliveries } =
@@ -52,17 +53,20 @@ function Orders() {
 							onClick={() => setViewDeliveries(true)}
 						/>
 					</div>
-					{viewDeliveries
-						? // TODO: create delivery component and implement visualizer
-						  deliveries!.map((delivery) => (
+					<AnimatePresence mode='popLayout'>
+						{viewDeliveries
+							? // TODO: create delivery component and implement visualizer
+							deliveries!.map((delivery) => (
 								<Delivery
-									delivery={delivery}
-									setVisualizeDelivery={handleChangeDelivery}
+								key={delivery.id}
+								delivery={delivery}
+								setVisualizeDelivery={handleChangeDelivery}
 								/>
-						  ))
-						: orders!.map((order) => (
-								<Order order={order} setVisualizeOrder={handleChangeOrder} />
-						  ))}
+								))
+								: orders!.map((order) => (
+									<Order key={order.id} order={order} setVisualizeOrder={handleChangeOrder} />
+									))}
+					</AnimatePresence>
 				</div>
 				{visualizeOrder ? (
 					<OrderVisualizer
