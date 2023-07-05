@@ -31,8 +31,10 @@ function Product({
         src={`http://localhost:3003/images/${product.slug}.jpg`}
         alt=""
       />
-      <p className="text-lg text-neutral-700">{product.name}</p>
-      <p className="text-2xl font-medium">{BRL(product.price)}</p>
+      <p className="text-lg text-text-secondary">{product.name}</p>
+      <p className="text-2xl font-medium text-text-primary">
+        {BRL(product.price)}
+      </p>
     </motion.div>
   );
 }

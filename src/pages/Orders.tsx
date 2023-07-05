@@ -38,7 +38,7 @@ function Orders() {
     return (
       <div className="flex flex-row gap-10 h-full">
         <div className="flex-1 overflow-y-auto">
-          <h1 className="text-3xl mb-5 font-bold">Pedidos</h1>
+          <h1 className="text-3xl mb-5 font-bold text-text-primary">Pedidos</h1>
           <div className="mb-5 flex flex-row gap-5">
             <Button
               variant={viewDeliveries ? "text_orange" : "fill_orange"}
@@ -80,9 +80,9 @@ function Orders() {
         ) : visualizeDelivery ? (
           <DeliveryVisualizer delivery={visualizeDelivery} />
         ) : (
-          <div className="bg-white rounded-3xl p-5 basis-[400px] flex flex-col justify-center items-center">
+          <div className="bg-background-secondary rounded-3xl p-5 basis-[400px] flex flex-col justify-center items-center">
             <img src={Hamburger} alt="" />
-            <h1 className="text-center p-5 text-neutral-500">
+            <h1 className="text-center p-5 text-text-secondary">
               Selecione um pedido para ver mais detalhes
             </h1>
           </div>

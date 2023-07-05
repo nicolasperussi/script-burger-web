@@ -5,6 +5,19 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --primary-background: 0deg 0% 96%;
+    --secondary-background: 0deg 0% 100%;
+    --primary-text: 0deg 0% 0%;
+    --secondary-text: 0deg 0% 45%;
+  }
+  :root.dark {
+    --primary-background: 0deg 0% 15%;
+    --secondary-background: 0deg 0% 9%;
+    --primary-text: 0deg 0% 98%;
+    --secondary-text: 0deg 0% 45%;
+  }
+
   html {
     font-family: Poppins, system-ui, sans-serif;
   }

@@ -23,6 +23,8 @@ const paths = [
   },
 ];
 
+document.documentElement.classList.add("dark");
+
 function Sidebar() {
   let location = useLocation();
 
@@ -35,8 +37,8 @@ function Sidebar() {
       : 0;
 
   return (
-    <nav className="h-[100vh] flex flex-col justify-between items-center py-5 w-32 bg-white">
-      <div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full bg-orange-50 cursor-pointer select-none">
+    <nav className="h-[100vh] flex flex-col justify-between items-center py-5 w-32 bg-background-secondary text-text-primary">
+      <div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full bg-orange-500 bg-opacity-10 cursor-pointer select-none">
         <IoCodeSlash className="text-4xl text-orange-500" />
       </div>
       <div className="flex flex-col gap-12">
@@ -44,9 +46,9 @@ function Sidebar() {
           <Link
             key={path.pathname}
             to={path.pathname}
-            className={`group flex flex-col justify-center items-center w-20 h-20 rounded-xl group-hover:bg-orange-100 cursor-pointer select-none ${
+            className={`group flex flex-col justify-center items-center w-20 h-20 rounded-xl group-hover:bg-orange-500 group-hover:bg-opacity-10 cursor-pointer select-none ${
               location.pathname.includes(`/${path.pathname}`)
-                ? "bg-orange-100"
+                ? "bg-orange-500 bg-opacity-10"
                 : ""
             }`}
           >
@@ -76,7 +78,7 @@ function Sidebar() {
           </Link>
         ))}
       </div>
-      <div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full hover:bg-orange-100 cursor-pointer select-none">
+      <div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full hover:bg-orange-500 hover:bg-opacity-10 cursor-pointer select-none">
         <IoSettings className="text-4xl" />
       </div>
     </nav>

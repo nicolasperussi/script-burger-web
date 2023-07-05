@@ -8,6 +8,7 @@ import Button from "./subcomponents/button.components";
 import ConfirmationModal from "./ConfirmationModal";
 import EmptyCart from "../assets/empty_cart.png";
 import { toast } from "react-toastify";
+import { AnimatePresence, motion } from "framer-motion";
 
 type CartOverlayProps = {
   showOverlay: boolean;
@@ -87,7 +88,7 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-background-secondary bg-opacity-75 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-hidden">
@@ -115,7 +116,7 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
                       <div className="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4">
                         <button
                           type="button"
-                          className="rounded-md text-gray-300 hover:text-white"
+                          className="rounded-md text-text-secondary hover:text-text-primary"
                           onClick={() => handleToggleOverlay(false)}
                         >
                           <span className="sr-only">Close panel</span>
@@ -123,74 +124,90 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
                         </button>
                       </div>
                     </Transition.Child>
-                    <div className="flex h-screen flex-col bg-white py-6 shadow-xl">
+                    <div className="flex h-screen flex-col bg-background-primary py-6 shadow-xl">
                       {products.length < 1 ? (
                         <div className="h-full w-full flex flex-col justify-center items-center">
-                          <img src={EmptyCart} alt="" />
-                          <h1 className="text-center p-5 text-neutral-500">
+                          {/* TODO: change image <img src={EmptyCart} alt="" /> */}
+                          <h1 className="text-center p-5 text-text-primary">
                             Adicione produtos ao seu pedido para ve-los aqui!
                           </h1>
                         </div>
                       ) : (
-                        <div className="flex flex-col bg-white rounded-3xl p-5 h-full gap-5">
+                        <div className="flex flex-col bg-background-primary rounded-3xl p-5 h-full gap-5">
                           <div className="flex-1 overflow-y-auto">
-                            {products
-                              .sort((a, b) =>
-                                a.product.price! > b.product.price! ? -1 : 1
-                              )
-                              .map((cartProduct: ProductCartType) => (
-                                <div className="py-5 border-b border-b-neutral-200 flex flex-row items-center gap-3">
-                                  <img
-                                    className="w-[75px] h-[75px] object-cover rounded-lg"
-                                    src={`http://localhost:3003/images/${cartProduct.product.slug}.jpg`}
-                                    alt=""
-                                  />
-                                  <div className="flex flex-col flex-1 gap-3">
-                                    <div className="text-lg font-semibold flex justify-between items-center">
-                                      {cartProduct.product.name}
-                                      {cartProduct.quantity > 1 ? (
-                                        <MinusIcon
-                                          onClick={() =>
-                                            removeFromCart(cartProduct)
-                                          }
-                                          className="h-6 w-6 text-red-500 cursor-pointer"
-                                          aria-hidden="true"
-                                        />
-                                      ) : (
-                                        <XMarkIcon
-                                          onClick={() =>
-                                            removeFromCart(cartProduct)
-                                          }
-                                          className="h-6 w-6 text-red-500 cursor-pointer"
-                                          aria-hidden="true"
-                                        />
-                                      )}
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <div className="flex gap-10 items-center">
-                                        <p className="">
-                                          {BRL(cartProduct.product.price)}
-                                        </p>
-                                        <p className="text-neutral-500">
-                                          x {cartProduct.quantity}
+                            <AnimatePresence>
+                              {products
+                                .sort((a, b) =>
+                                  a.product.price! > b.product.price! ? -1 : 1
+                                )
+                                .map((cartProduct: ProductCartType) => (
+                                  <motion.div
+                                    initial={{ scale: 0.8, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.8, opacity: 0 }}
+                                    transition={{
+                                      type: "spring",
+                                      stiffness: 500,
+                                      damping: 50,
+                                      mass: 1,
+                                    }}
+                                    key={cartProduct.product.id}
+                                    className="py-5 border-b border-b-text-secondary flex flex-row items-center gap-3"
+                                  >
+                                    <img
+                                      className="w-[75px] h-[75px] object-cover rounded-lg"
+                                      src={`http://localhost:3003/images/${cartProduct.product.slug}.jpg`}
+                                      alt=""
+                                    />
+                                    <div className="flex flex-col flex-1 gap-3">
+                                      <div className="text-lg font-semibold flex justify-between items-center">
+                                        <span className="text-text-primary">
+                                          {cartProduct.product.name}
+                                        </span>
+                                        {cartProduct.quantity > 1 ? (
+                                          <MinusIcon
+                                            onClick={() =>
+                                              removeFromCart(cartProduct)
+                                            }
+                                            className="h-6 w-6 text-red-500 cursor-pointer"
+                                            aria-hidden="true"
+                                          />
+                                        ) : (
+                                          <XMarkIcon
+                                            onClick={() =>
+                                              removeFromCart(cartProduct)
+                                            }
+                                            className="h-6 w-6 text-red-500 cursor-pointer"
+                                            aria-hidden="true"
+                                          />
+                                        )}
+                                      </div>
+                                      <div className="flex justify-between">
+                                        <div className="flex gap-10 items-center">
+                                          <p className="text-text-primary">
+                                            {BRL(cartProduct.product.price)}
+                                          </p>
+                                          <p className="text-text-secondary">
+                                            x {cartProduct.quantity}
+                                          </p>
+                                        </div>
+                                        <p className="text-lg font-semibold text-text-primary">
+                                          {BRL(
+                                            cartProduct.product.price *
+                                              cartProduct.quantity
+                                          )}
                                         </p>
                                       </div>
-                                      <p className="text-lg font-semibold">
-                                        {BRL(
-                                          cartProduct.product.price *
-                                            cartProduct.quantity
-                                        )}
-                                      </p>
                                     </div>
-                                  </div>
-                                </div>
-                              ))}
+                                  </motion.div>
+                                ))}
+                            </AnimatePresence>
                           </div>
 
                           <footer className="flex flex-col gap-5">
                             <div className="text-xl flex flex-row justify-between">
-                              <h1 className="text-neutral-500">Total</h1>
-                              <h1 className="font-semibold">
+                              <h1 className="text-text-secondary">Total</h1>
+                              <h1 className="font-semibold text-text-primary">
                                 {BRL(totalPrice)}
                               </h1>
                             </div>

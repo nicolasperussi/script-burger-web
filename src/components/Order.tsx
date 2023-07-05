@@ -27,26 +27,28 @@ function Order({ order, setVisualizeOrder }: OrderProps) {
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0.8, opacity: 0 }}
       transition={{ type: "spring", stiffness: 500, damping: 50, mass: 1 }}
-      className="mb-3 bg-white p-5 rounded-3xl flex flex-row justify-between items-center cursor-pointer select-none"
+      className="mb-3 bg-background-secondary p-5 rounded-3xl flex flex-row justify-between items-center cursor-pointer select-none"
       onClick={() => setVisualizeOrder(order)}
     >
       <div className="flex flex-col gap-5">
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-xl font-semibold text-text-primary">
           Pedido #{order.id.split("-")[0].toUpperCase()}
         </h1>
-        <h2 className="text-neutral-700">
+        <h2 className="text-text-secondary">
           Produtos: {order.productList.length}
         </h2>
       </div>
       <div className="text-right">
-        <h3 className="text-neutral-500 ">
+        <h3 className="text-text-secondary">
           {new Date(order.createdAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
         </h3>
         <div className="flex flex-row gap-5 items-center mt-3">
-          <h2 className="font-semibold text-lg">{BRL(order.totalPrice)}</h2>
+          <h2 className="font-semibold text-lg text-text-primary">
+            {BRL(order.totalPrice)}
+          </h2>
           <span
             className={`${
               getOrderStatus(order.status).color

@@ -36,7 +36,7 @@ function Products() {
   return (
     <div className="h-full">
       <Cart />
-      <h1 className="text-3xl mb-5 font-bold">Produtos</h1>
+      <h1 className="text-3xl mb-5 font-bold text-text-primary">Produtos</h1>
       <div className="mb-5 flex flex-row gap-5">
         <Button
           variant={category === "sandwich" ? "fill_orange" : "text_orange"}
