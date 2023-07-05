@@ -19,7 +19,7 @@ function Root() {
   });
 
   return (
-    <div className="flex bg-background-primary overflow-hidden">
+    <div className="flex bg-background-primary overflow-hidden ">
       <Sidebar />
       <AnimatePresence mode="popLayout">
         <motion.div

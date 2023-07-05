@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { BRL } from "../services/utils";
 import { IOrder } from "../types/IOrder";
-import Button from "./subcomponents/button.components";
+import { FillButton, TextButton } from "./subcomponents/button.components";
 import ConfirmationModal from "./ConfirmationModal";
 import { api } from "../services/api";
 import { OrderContext } from "../context/OrdersContext";
@@ -159,21 +159,28 @@ function OrderVisualizer({
         </div>
         <div className="flex flex-col gap-3">
           {!(order!.status === "DONE") && (
-            <Button
+            <FillButton
               title="Próximo passo"
-              variant="fill_orange"
+              color="orange"
               onClick={() => handleToggleNextStepModal(true)}
               size="xl"
             />
           )}
-          <Button
-            title={
-              order!.status === "DONE" ? "Apagar pedido" : "Cancelar pedido"
-            }
-            variant={order!.status === "DONE" ? "fill_red" : "text_red"}
-            onClick={() => handleToggleDeleteModal(true)}
-            size="xl"
-          />
+          {order!.status === "DONE" ? (
+            <FillButton
+              title="Apagar pedido"
+              color="red"
+              onClick={() => handleToggleDeleteModal(true)}
+              size="xl"
+            />
+          ) : (
+            <TextButton
+              title="Cancelar pedido"
+              color="red"
+              onClick={() => handleToggleDeleteModal(true)}
+              size="xl"
+            />
+          )}
         </div>
       </footer>
     </div>

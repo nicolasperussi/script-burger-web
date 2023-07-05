@@ -17,15 +17,15 @@ function ThemeSwitcher() {
 
   return (
     <div
-      className="group flex flex-col justify-center items-center w-20 h-20 rounded-full hover:bg-orange-500 hover:bg-opacity-10 cursor-pointer select-none text-4xl"
+      className="group flex flex-col justify-center items-center w-20 h-20 rounded-full hover:bg-accent-orange hover:bg-opacity-10 cursor-pointer select-none text-4xl"
       onClick={() =>
         setTheme((prev: string) => (prev === "light" ? "dark" : "light"))
       }
     >
       {theme === "dark" ? (
-        <IoSunny className="group-hover:text-orange-500" />
+        <IoSunny className="group-hover:text-accent-orange" />
       ) : (
-        <IoMoon className="group-hover:text-orange-500" />
+        <IoMoon className="group-hover:text-accent-orange" />
       )}
     </div>
   );

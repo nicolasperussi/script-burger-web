@@ -4,11 +4,11 @@ import { XMarkIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { BRL } from "../services/utils";
 import { CartContext } from "../context/CartContext";
 import { IProduct } from "../types/IProduct";
-import Button from "./subcomponents/button.components";
 import ConfirmationModal from "./ConfirmationModal";
 import EmptyCart from "../assets/empty_cart.png";
 import { toast } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
+import { FillButton, TextButton } from "./subcomponents/button.components";
 
 type CartOverlayProps = {
   showOverlay: boolean;
@@ -152,7 +152,7 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
                                       mass: 1,
                                     }}
                                     key={cartProduct.product.id}
-                                    className="py-5 border-b border-b-text-secondary flex flex-row items-center gap-3"
+                                    className="py-5 border-b border-b-text-secondary border-opacity-25 flex flex-row items-center gap-3"
                                   >
                                     <img
                                       className="w-[75px] h-[75px] object-cover rounded-lg"
@@ -212,15 +212,15 @@ function CartOverlay({ showOverlay, handleToggleOverlay }: CartOverlayProps) {
                               </h1>
                             </div>
                             <div className="flex flex-col gap-3">
-                              <Button
+                              <FillButton
                                 title="Finalizar pedido"
-                                variant="fill_orange"
+                                color="orange"
                                 onClick={() => toggleClientOpen(true)}
                                 size="xl"
                               />
-                              <Button
+                              <TextButton
                                 title="Cancelar pedido"
-                                variant="text_red"
+                                color="red"
                                 onClick={() => handleToggleModal(true)}
                                 size="xl"
                               />
@@ -263,7 +263,7 @@ function GetClientName({ isOpen, toggleModal, closeCart }: GetClientNameProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-background-secondary bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -277,11 +277,11 @@ function GetClientName({ isOpen, toggleModal, closeCart }: GetClientNameProps) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-background-secondary text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div className="bg-background-secondary px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <label
                     htmlFor="username"
-                    className="block  text-lg font-medium leading-6 text-gray-900"
+                    className="block text-lg font-medium leading-6 text-text-primary"
                   >
                     Nome do cliente
                   </label>
@@ -291,17 +291,17 @@ function GetClientName({ isOpen, toggleModal, closeCart }: GetClientNameProps) {
                         type="text"
                         name="username"
                         id="username"
-                        className="block flex-1 border bg-transparent p-2 text-gray-900 placeholder:text-gray-400 text-lg"
-                        placeholder=""
+                        className="block flex-1 border border-text-secondary rounded-md bg-transparent p-2 text-text-primary placeholder:text-text-secondary text-lg"
+                        placeholder="Digite o nome do cliente"
                         onChange={(e) => setClientName(e.target.value)}
                       />
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 gap-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Button
+                <div className="bg-background-secondary px-4 py-3 gap-3 sm:flex sm:flex-row-reverse sm:px-6">
+                  <FillButton
                     title="Finalizar pedido"
-                    variant="fill_orange"
+                    color="orange"
                     size="sm"
                     onClick={() => {
                       placeOrder();
@@ -309,11 +309,14 @@ function GetClientName({ isOpen, toggleModal, closeCart }: GetClientNameProps) {
                       closeCart();
                     }}
                   />
-                  <Button
+                  <TextButton
                     title="Cancelar"
-                    variant="text_stone"
+                    color="red"
                     size="sm"
-                    onClick={() => toggleModal(false)}
+                    onClick={() => {
+                      console.log("clicked");
+                      toggleModal(false);
+                    }}
                   />
                 </div>
               </Dialog.Panel>

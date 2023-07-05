@@ -5,52 +5,25 @@ import { IOrder } from "../types/IOrder";
 
 import Hamburger from "../assets/hamburger.png";
 import { OrderContext } from "../context/OrdersContext";
-import Button from "../components/subcomponents/button.components";
-import { IDelivery } from "../types/IDelivery";
 import { AnimatePresence } from "framer-motion";
 
 function Orders() {
-  const { orders, isFetchingOrders, deliveries, isFetchingDeliveries } =
-    useContext(OrderContext);
+  const { orders, isFetchingOrders } = useContext(OrderContext);
   const [visualizeOrder, setVisualizeOrder] = useState<IOrder | null>();
-  const [visualizeDelivery, setVisualizeDelivery] =
-    useState<IDelivery | null>();
 
   function handleChangeOrder(order: IOrder) {
-    setVisualizeDelivery(null);
     setVisualizeOrder(order);
-  }
-  function handleChangeDelivery(delivery: IDelivery) {
-    setVisualizeOrder(null);
-    setVisualizeDelivery(delivery);
   }
 
   function handleResetVisualizer() {
-    setVisualizeDelivery(null);
     setVisualizeOrder(null);
   }
 
-  const [viewDeliveries, setViewDeliveries] = useState(false);
-
-  if (!isFetchingOrders && !isFetchingDeliveries)
+  if (!isFetchingOrders)
     return (
       <div className="flex flex-row gap-10 h-full">
         <div className="flex-1 overflow-y-auto">
           <h1 className="text-3xl mb-5 font-bold text-text-primary">Pedidos</h1>
-          <div className="mb-5 flex flex-row gap-5">
-            <Button
-              variant={viewDeliveries ? "text_orange" : "fill_orange"}
-              title="Comer no local"
-              size="md"
-              onClick={() => setViewDeliveries(false)}
-            />
-            <Button
-              variant={viewDeliveries ? "fill_orange" : "text_orange"}
-              title="Entregas"
-              size="md"
-              onClick={() => setViewDeliveries(true)}
-            />
-          </div>
           <AnimatePresence mode="popLayout">
             {orders!.map((order) => (
               <Order

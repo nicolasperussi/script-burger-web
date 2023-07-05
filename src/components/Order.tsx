@@ -13,12 +13,12 @@ function getOrderStatus(orderStatus: string): {
   color: string;
 } {
   if (orderStatus === "WAITING")
-    return { status: "Em espera", color: "bg-red-700" };
+    return { status: "Em espera", color: "bg-accent-red" };
   if (orderStatus === "IN_PRODUCTION")
-    return { status: "Em produção", color: "bg-amber-500" };
+    return { status: "Em produção", color: "bg-accent-yellow" };
   if (orderStatus === "IN_TRANSIT")
-    return { status: "Em trânsito", color: "bg-blue-500" };
-  return { status: "Finalizada", color: "bg-green-700" };
+    return { status: "Em trânsito", color: "bg-accent-blue" };
+  return { status: "Finalizada", color: "bg-accent-green" };
 }
 
 function Order({ order, setVisualizeOrder }: OrderProps) {
@@ -41,12 +41,17 @@ function Order({ order, setVisualizeOrder }: OrderProps) {
         </h2>
       </div>
       <div className="text-right">
-        <h3 className="text-text-secondary">
-          {new Date(order.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </h3>
+        <div className="flex flex-row-reverse gap-5 items-center mt-3">
+          <h3 className="text-text-secondary">
+            {new Date(order.createdAt).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </h3>
+          <h1 className="text-md font-medium text-text-primary">
+            {order.type === "DELIVERY" ? "Entrega" : "Comer no local"}
+          </h1>
+        </div>
         <div className="flex flex-row gap-5 items-center mt-3">
           <h2 className="font-semibold text-lg text-text-primary">
             {BRL(order.totalPrice)}

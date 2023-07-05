@@ -1,65 +1,47 @@
 import React from "react";
 
-type Colors =
-  | "slate"
-  | "gray"
-  | "zinc"
-  | "neutral"
-  | "stone"
-  | "red"
-  | "orange"
-  | "amber"
-  | "yellow"
-  | "lime"
-  | "green"
-  | "emerald"
-  | "teal"
-  | "cyan"
-  | "sky"
-  | "blue"
-  | "indigo"
-  | "violet"
-  | "purple"
-  | "fuchsia"
-  | "pink"
-  | "rose";
-
 type ButtonProps = {
   title: string;
-  variant: string;
-  size?: string;
+  color: string;
+  size: string;
   onClick(): void;
 };
 
-function Button({ variant, size = "md", title, onClick }: ButtonProps) {
-  const sizes = {
-    sm: "text-sm",
-    md: "text-md",
-    lg: "text-lg",
-    xl: "text-xl",
-    xl2: "text-2xl",
-    xl3: "text-3xl",
-  };
+const sizes = {
+  sm: "text-sm",
+  md: "text-md",
+  lg: "text-lg",
+  xl: "text-xl",
+  xl2: "text-2xl",
+  xl3: "text-3xl",
+};
 
-  const variants = {
-    fill_red: "bg-red-600 text-white hover:bg-red-500 shadow-sm",
-    fill_green: "bg-green-600 text-white hover:bg-green-500 shadow-sm",
-    fill_orange: "bg-orange-600 text-white hover:bg-orange-500 shadow-sm",
-    fill_amber: "bg-amber-600 text-white hover:bg-amber-500 shadow-sm",
-    outline_red:
-      "border border-red-500 text-red-500 hover:bg-red-600 hover:text-white hover:border-red-600 shadow-sm",
-    outline_orange:
-      "border border-orange-500 text-orange-500 hover:bg-orange-600 hover:text-white hover:border-orange-600 shadow-sm",
-    text_red: "text-red-500",
-    text_orange: "text-orange-500",
-    text_black: "text-stone-500",
-  };
+function getFillColor(color: string) {
+  if (color === "blue") return "bg-accent-blue dark:text-accent-blue";
+  if (color === "red") return "bg-accent-red dark:text-accent-red";
+  if (color === "yellow") return "bg-accent-yellow dark:text-accent-yellow";
+  if (color === "green") return "bg-accent-green dark:text-accent-green";
+  if (color === "orange") return "bg-accent-orange dark:text-accent-orange";
+  if (color === "neutral") return "bg-text-primary dark:text-text-primary";
+}
 
+function getTextColor(color: string) {
+  if (color === "blue") return "text-accent-blue bg-accent-blue";
+  if (color === "red") return "text-accent-red bg-accent-red";
+  if (color === "yellow") return "text-accent-yellow bg-accent-yellow";
+  if (color === "green") return "text-accent-green bg-accent-green";
+  if (color === "orange") return "text-accent-orange bg-accent-orange";
+  if (color === "neutral") return "text-text-primary bg-text-secondary";
+}
+
+function FillButton({ color, size, title, onClick }: ButtonProps) {
   return (
     <button
-      className={`${variants[variant as keyof typeof variants]} ${
+      className={`rounded-md px-3 py-3 font-semibold text-white ${getFillColor(
+        color
+      )} ${
         sizes[size as keyof typeof sizes]
-      } rounded-md px-3 py-2 font-semibold`}
+      } hover:bg-opacity-90 dark:bg-opacity-25 dark:hover:bg-opacity-40`}
       onClick={onClick}
     >
       {title}
@@ -67,4 +49,17 @@ function Button({ variant, size = "md", title, onClick }: ButtonProps) {
   );
 }
 
-export default Button;
+function TextButton({ color, size, title, onClick }: ButtonProps) {
+  return (
+    <button
+      className={`rounded-md px-3 py-3 font-semibold ${getTextColor(color)} ${
+        sizes[size as keyof typeof sizes]
+      } bg-opacity-0 hover:bg-opacity-25 `}
+      onClick={onClick}
+    >
+      {title}
+    </button>
+  );
+}
+
+export { FillButton, TextButton };

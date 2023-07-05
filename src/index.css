@@ -10,12 +10,22 @@
     --secondary-background: 0deg 0% 100%;
     --primary-text: 0deg 0% 0%;
     --secondary-text: 0deg 0% 45%;
+    --accent-orange: 25deg 95% 53%;
+    --accent-red: 0deg 72% 51%;
+    --accent-green: 142deg 76% 36%;
+    --accent-yellow: 38deg 92% 50%;
+    --accent-blue: 200deg 98% 39%;
   }
   :root.dark {
-    --primary-background: 0deg 0% 15%;
-    --secondary-background: 0deg 0% 9%;
+    --secondary-background: 0deg 0% 15%;
+    --primary-background: 0deg 0% 9%;
     --primary-text: 0deg 0% 98%;
     --secondary-text: 0deg 0% 45%;
+    --accent-orange: 27deg 96% 61%;
+    --accent-red: 0deg 84% 60%;
+    --accent-green: 142deg 69% 58%;
+    --accent-yellow: 43deg 96% 56%;
+    --accent-blue: 198deg 93% 60%;
   }
 
   html {

@@ -5,7 +5,7 @@ import {
   QuestionMarkCircleIcon,
   CheckBadgeIcon,
 } from "@heroicons/react/24/outline";
-import Button from "./subcomponents/button.components";
+import { FillButton, TextButton } from "./subcomponents/button.components";
 
 type ConfirmationModalProps = {
   isOpen: boolean;
@@ -95,23 +95,23 @@ function ConfirmationModal({
                   </div>
                 </div>
                 <div className="bg-background-primary px-4 py-3 sm:flex sm:flex-row-reverse gap-3 sm:px-6">
-                  <Button
+                  <FillButton
                     title={confirmTitle}
                     onClick={confirmFunction}
                     size="sm"
-                    variant={
+                    color={
                       icon === "alert"
-                        ? "fill_red"
+                        ? "red"
                         : icon === "warning"
-                        ? "fill_amber"
-                        : "fill_green"
+                        ? "yellow"
+                        : "green"
                     }
                   />
-                  <Button
+                  <TextButton
                     title={cancelTitle}
                     onClick={() => handleToggleModal(false)}
                     size="sm"
-                    variant="text_stone"
+                    color="neutral"
                   />
                 </div>
               </Dialog.Panel>

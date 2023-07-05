@@ -5,7 +5,7 @@ import { BRL } from "../services/utils";
 
 import { IoAdd, IoRemove } from "react-icons/io5";
 import { CartContext } from "../context/CartContext";
-import Button from "./subcomponents/button.components";
+import { FillButton } from "./subcomponents/button.components";
 
 type ProductModalProps = {
   product: IProduct;
@@ -108,13 +108,13 @@ function ProductModal({
                       </div>
                     </div>
 
-                    <Button
+                    <FillButton
                       onClick={() => {
                         addToCart({ product, quantity });
                         handleToggleOverlay(false);
                         handleResetQuantity();
                       }}
-                      variant="fill_orange"
+                      color="orange"
                       size="xl"
                       title="Adicionar ao carrinho"
                     />

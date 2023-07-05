@@ -15,12 +15,12 @@ function Cart() {
   return (
     <>
       <div
-        className="absolute right-8 top-8 p-6 flex items-center justify-center rounded-full text-2xl text-orange-500 bg-background-secondary cursor-pointer shadow-lg hover:scale-110 transition-all ease-in-out"
+        className="absolute right-8 top-8 p-6 flex items-center justify-center rounded-full text-2xl text-accent-orange bg-background-secondary cursor-pointer shadow-lg hover:scale-110"
         onClick={() => handleToggleOverlay(true)}
       >
         <IoCart />
         {products.length > 0 && (
-          <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-orange-500 border-2 border-white rounded-full top-0 right-0">
+          <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-accent-orange border-2 border-white rounded-full top-0 right-0">
             {products.length}
           </div>
         )}
