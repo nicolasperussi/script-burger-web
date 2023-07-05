@@ -20,7 +20,7 @@ function Cart() {
       >
         <IoCart />
         {products.length > 0 && (
-          <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-orange-500 border-2 border-background-secondary rounded-full top-0 right-0">
+          <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-orange-500 border-2 border-white rounded-full top-0 right-0">
             {products.length}
           </div>
         )}

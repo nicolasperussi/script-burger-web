@@ -27,6 +27,9 @@ function App() {
     },
   ]);
 
+  // TODO: add dark mode switching
+  // TODO: choose the right accent colors (orange, red, yellow and green) and adequate colors for light mode
+
   return (
     <OrderProvider>
       <ProductProvider>

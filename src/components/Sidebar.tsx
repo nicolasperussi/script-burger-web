@@ -9,6 +9,7 @@ import {
   IoSettings,
 } from "react-icons/io5";
 import { OrderContext } from "../context/OrdersContext";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const paths = [
   {
@@ -23,7 +24,7 @@ const paths = [
   },
 ];
 
-document.documentElement.classList.add("dark");
+document.documentElement.classList.remove("dark");
 
 function Sidebar() {
   let location = useLocation();
@@ -78,9 +79,7 @@ function Sidebar() {
           </Link>
         ))}
       </div>
-      <div className="group flex flex-col justify-center items-center w-20 h-20 rounded-full hover:bg-orange-500 hover:bg-opacity-10 cursor-pointer select-none">
-        <IoSettings className="text-4xl" />
-      </div>
+      <ThemeSwitcher />
     </nav>
   );
 }
