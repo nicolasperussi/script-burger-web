@@ -16,6 +16,8 @@ function getOrderStatus(orderStatus: string): {
     return { status: "Em espera", color: "bg-red-700" };
   if (orderStatus === "IN_PRODUCTION")
     return { status: "Em produção", color: "bg-amber-500" };
+  if (orderStatus === "IN_TRANSIT")
+    return { status: "Em trânsito", color: "bg-blue-500" };
   return { status: "Finalizada", color: "bg-green-700" };
 }
 

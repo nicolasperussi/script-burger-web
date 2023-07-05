@@ -11,6 +11,13 @@ type OrderVisualizerProps = {
   order?: IOrder | null;
   handleResetVisualizer: () => void;
 };
+type OrderType = "DINE_IN" | "DELIVERY";
+type OrderStatus = "WAITING" | "IN_PRODUCTION" | "IN_TRANSIT" | "DONE";
+function getNextStatus(status: OrderStatus, type: OrderType) {
+  if (status === "WAITING") return "IN_PRODUCTION";
+  if (status === "IN_PRODUCTION" && type === "DELIVERY") return "IN_TRANSIT";
+  return "DONE";
+}
 
 function OrderVisualizer({
   order,
@@ -80,7 +87,7 @@ function OrderVisualizer({
         confirmFunction={() => {
           api
             .patch(`/order/${order!.id}`, {
-              status: order!.status === "WAITING" ? "IN_PRODUCTION" : "DONE",
+              status: getNextStatus(order!.status, order!.type),
             })
             .then(() => {
               {
@@ -89,10 +96,7 @@ function OrderVisualizer({
                     orderObj.id === order!.id
                       ? {
                           ...orderObj,
-                          status:
-                            order!.status === "WAITING"
-                              ? "IN_PRODUCTION"
-                              : "DONE",
+                          status: getNextStatus(order!.status, order!.type),
                         }
                       : orderObj
                   )

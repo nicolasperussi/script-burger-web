@@ -6,9 +6,7 @@ import { IOrder } from "../types/IOrder";
 import Hamburger from "../assets/hamburger.png";
 import { OrderContext } from "../context/OrdersContext";
 import Button from "../components/subcomponents/button.components";
-import Delivery from "../components/Delivery";
 import { IDelivery } from "../types/IDelivery";
-import DeliveryVisualizer from "../components/DeliveryVisualizer";
 import { AnimatePresence } from "framer-motion";
 
 function Orders() {
@@ -54,22 +52,13 @@ function Orders() {
             />
           </div>
           <AnimatePresence mode="popLayout">
-            {viewDeliveries
-              ? // TODO: create delivery component and implement visualizer
-                deliveries!.map((delivery) => (
-                  <Delivery
-                    key={delivery.id}
-                    delivery={delivery}
-                    setVisualizeDelivery={handleChangeDelivery}
-                  />
-                ))
-              : orders!.map((order) => (
-                  <Order
-                    key={order.id}
-                    order={order}
-                    setVisualizeOrder={handleChangeOrder}
-                  />
-                ))}
+            {orders!.map((order) => (
+              <Order
+                key={order.id}
+                order={order}
+                setVisualizeOrder={handleChangeOrder}
+              />
+            ))}
           </AnimatePresence>
         </div>
         {visualizeOrder ? (
@@ -77,8 +66,6 @@ function Orders() {
             order={visualizeOrder}
             handleResetVisualizer={handleResetVisualizer}
           />
-        ) : visualizeDelivery ? (
-          <DeliveryVisualizer delivery={visualizeDelivery} />
         ) : (
           <div className="bg-background-secondary rounded-3xl p-5 basis-[400px] flex flex-col justify-center items-center">
             <img src={Hamburger} alt="" />
