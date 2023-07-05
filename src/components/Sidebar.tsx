@@ -29,13 +29,9 @@ document.documentElement.classList.remove("dark");
 function Sidebar() {
   let location = useLocation();
 
-  const { deliveries, orders, isFetchingDeliveries, isFetchingOrders } =
-    useContext(OrderContext);
+  const { orders, isFetchingOrders } = useContext(OrderContext);
 
-  const totalOrdersNumber =
-    !isFetchingDeliveries && !isFetchingOrders
-      ? deliveries!.length + orders!.length
-      : 0;
+  const totalOrdersNumber = !isFetchingOrders ? orders!.length : 0;
 
   return (
     <nav className="h-[100vh] flex flex-col justify-between items-center py-5 w-32 bg-background-secondary text-text-primary">
