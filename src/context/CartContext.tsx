@@ -94,6 +94,7 @@ function CartProvider({ children }: CartProviderProps) {
           .map((product) => product.product.price * product.quantity)
           .reduce((accumulator, currentValue) => accumulator + currentValue, 0),
         productList: products,
+        type: "DINE_IN",
       })
       .then(() => {
         toast.success("Pedido criado com sucesso!", {

@@ -17,8 +17,8 @@
     --accent-blue: 200deg 98% 39%;
   }
   :root.dark {
-    --secondary-background: 0deg 0% 15%;
     --primary-background: 0deg 0% 9%;
+    --secondary-background: 0deg 0% 15%;
     --primary-text: 0deg 0% 98%;
     --secondary-text: 0deg 0% 45%;
     --accent-orange: 27deg 96% 61%;
