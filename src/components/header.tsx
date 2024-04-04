@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { logout } from "@/lib/auth";
 
 function Header() {
   return (
@@ -60,7 +61,10 @@ function Header() {
             <DropdownMenuContent>
               <DropdownMenuLabel>Script Burger</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 text-red-400 cursor-pointer">
+              <DropdownMenuItem
+                onClick={logout}
+                className="gap-2 text-red-400 cursor-pointer"
+              >
                 <LogOut className="size-4" />
                 <span>Sair</span>
               </DropdownMenuItem>

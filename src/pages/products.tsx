@@ -1,12 +1,17 @@
 import ProductList from "@/components/product-list";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useFetch } from "@/hooks/useFetch";
+import { api } from "@/lib/api";
 import { IProduct } from "@/types/product.interface";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
+import { useQuery } from "react-query";
 
 function Products() {
-  const { data: products } = useFetch<Array<IProduct>>("/products");
+  const { data: products, isFetching } = useQuery("products", async () => {
+    const response = await api.get("/products");
+
+    return response.data;
+  });
 
   return (
     <div>
@@ -25,38 +30,44 @@ function Products() {
             <span>Novo Produto</span>
           </Button>
         </div>
-        {products ? (
-          <>
-            <TabsContent value="sandwiches">
-              <ProductList
-                products={products.filter(
-                  (product: IProduct) => product.category === "SANDWICH"
-                )}
-              />
-            </TabsContent>
-            <TabsContent value="side">
-              <ProductList
-                products={products.filter(
-                  (product: IProduct) => product.category === "SIDE"
-                )}
-              />
-            </TabsContent>
-            <TabsContent value="drinks">
-              <ProductList
-                products={products.filter(
-                  (product: IProduct) => product.category === "DRINK"
-                )}
-              />
-            </TabsContent>
-            <TabsContent value="desserts">
-              <ProductList
-                products={products.filter(
-                  (product: IProduct) => product.category === "DESSERT"
-                )}
-              />
-            </TabsContent>
-          </>
-        ) : null}
+        {!isFetching ? (
+          products && (
+            <>
+              <TabsContent value="sandwiches">
+                <ProductList
+                  products={products.filter(
+                    (product: IProduct) => product.category === "SANDWICH"
+                  )}
+                />
+              </TabsContent>
+              <TabsContent value="side">
+                <ProductList
+                  products={products.filter(
+                    (product: IProduct) => product.category === "SIDE"
+                  )}
+                />
+              </TabsContent>
+              <TabsContent value="drinks">
+                <ProductList
+                  products={products.filter(
+                    (product: IProduct) => product.category === "DRINK"
+                  )}
+                />
+              </TabsContent>
+              <TabsContent value="desserts">
+                <ProductList
+                  products={products.filter(
+                    (product: IProduct) => product.category === "DESSERT"
+                  )}
+                />
+              </TabsContent>
+            </>
+          )
+        ) : (
+          <div className="grid place-items-center w-full h-full">
+            <Loader2 className="size-32 animate-spin text-border" />
+          </div>
+        )}
       </Tabs>
     </div>
   );

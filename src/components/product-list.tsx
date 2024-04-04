@@ -10,7 +10,10 @@ function ProductList(props: ProductListProps) {
     <div className="flex flex-wrap gap-8">
       {props.products.map((product: IProduct) => {
         return (
-          <div className="cursor-pointer flex flex-col gap-4 hover:scale-105 transition-transform duration-150">
+          <div
+            key={product.id}
+            className="cursor-pointer flex flex-col gap-4 hover:scale-105 transition-transform duration-150"
+          >
             <img
               className="size-48 rounded-lg object-cover"
               src={`http://localhost:3003/images/${product.slug}.jpg`}
