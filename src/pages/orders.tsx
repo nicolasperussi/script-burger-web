@@ -18,8 +18,6 @@ import {
   Search,
   Trash,
 } from "lucide-react";
-import { useQuery } from "react-query";
-import { api } from "@/lib/api";
 import { twMerge } from "tailwind-merge";
 import {
   DropdownMenu,
@@ -39,10 +37,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CourierContext } from "@/lib/context/couriers-context";
 import { ICourier } from "@/types/courier.interface";
 import { Link } from "react-router-dom";
+import { OrderContext } from "@/lib/context/orders-context";
 
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
@@ -256,59 +255,13 @@ const columns: ColumnDef<IColumnOrder>[] = [
 ];
 
 function Orders() {
-  const [orders, setOrders] = useState<Array<IOrder>>([]);
-  const { isFetching } = useQuery("orders", async () => {
-    const response = await api.get("/orders");
-    setOrders(response.data);
-    return response.data;
-  });
-
-  function advanceOrder(orderId: string | number) {
-    api.patch(`/orders/${orderId}`).then(() =>
-      setOrders(
-        orders.map((order: IOrder) =>
-          order.id === orderId
-            ? {
-                ...order,
-                status:
-                  order.status === "WAITING"
-                    ? "IN_PRODUCTION"
-                    : order.status === "IN_PRODUCTION"
-                    ? "IN_TRANSIT"
-                    : "DELIVERED",
-              }
-            : order
-        )
-      )
-    );
-  }
-
-  function cancelOrder(orderId: string | number) {
-    api.patch(`/orders/cancel/${orderId}`).then(() =>
-      setOrders(
-        orders.map((order: IOrder) =>
-          order.id === orderId && order.status !== "DELIVERED"
-            ? {
-                ...order,
-                status: "CANCELED",
-              }
-            : order
-        )
-      )
-    );
-  }
-
-  function assignCourier(orderId: number | string, courier: ICourier) {
-    api
-      .patch(`/orders/${orderId}/courier/${courier.id}`)
-      .then(() =>
-        setOrders(
-          orders.map((order: IOrder) =>
-            order.id === orderId ? { ...order, courier } : order
-          )
-        )
-      );
-  }
+  const {
+    orders,
+    isFetchingOrders,
+    handleAdvanceOrder,
+    handleCancelOrder,
+    handleAssignCourier,
+  } = useContext(OrderContext);
 
   return (
     <div className="flex flex-col w-full gap-4 h-full">
@@ -316,7 +269,7 @@ function Orders() {
       <div className="flex gap-3">
         <span>Filtros:</span>
       </div>
-      {!isFetching ? (
+      {!isFetchingOrders ? (
         <DataTable
           columns={columns}
           data={
@@ -333,10 +286,10 @@ function Orders() {
                     moment: new Date(order.moment),
                     status: order.status,
                     courier: order.courier?.name,
-                    cancelOrder: () => cancelOrder(order.id),
-                    advanceOrder: () => advanceOrder(order.id),
+                    cancelOrder: () => handleCancelOrder(order.id),
+                    advanceOrder: () => handleAdvanceOrder(order.id),
                     assignCourier: (courier: ICourier) =>
-                      assignCourier(order.id, courier),
+                      handleAssignCourier(order.id, courier),
                   })
                 )
               : []

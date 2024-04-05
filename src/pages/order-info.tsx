@@ -1,4 +1,3 @@
-import { api } from "@/lib/api";
 import { IOrder } from "@/types/order.interface";
 
 import dayjs from "dayjs";
@@ -7,6 +6,8 @@ import updateLocale from "dayjs/plugin/updateLocale";
 import ptBR from "dayjs/locale/pt-br";
 
 import {
+  ArrowRight,
+  Ban,
   ChevronLeft,
   Clock,
   DollarSign,
@@ -16,8 +17,7 @@ import {
   Truck,
   User,
 } from "lucide-react";
-import { useContext, useState } from "react";
-import { useQuery } from "react-query";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BRL } from "@/lib/utils";
 import {
@@ -34,6 +34,24 @@ import { ICourier } from "@/types/courier.interface";
 import { IProduct } from "@/types/product.interface";
 import { DataTable } from "@/components/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import OrderStepper from "@/components/order-stepper";
+import { OrderContext } from "@/lib/context/orders-context";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 dayjs.locale(ptBR);
 dayjs.extend(calendar);
@@ -60,11 +78,20 @@ const columns: ColumnDef<{
     header: "Nome",
     cell: ({ row }) => (
       <div className="flex gap-4 items-center">
-        {/* TODO: add a zoom to the image on hover */}
-        <img
-          src={`http://localhost:3003/images/${row.original.product.slug}.jpg`}
-          className="size-12 rounded-lg object-cover"
-        />
+        <HoverCard>
+          <HoverCardTrigger>
+            <img
+              src={`http://localhost:3003/images/${row.original.product.slug}.jpg`}
+              className="size-12 rounded-lg object-cover"
+            />
+          </HoverCardTrigger>
+          <HoverCardContent className="size-64">
+            <img
+              src={`http://localhost:3003/images/${row.original.product.slug}.jpg`}
+              className="size-full rounded-lg object-cover"
+            />
+          </HoverCardContent>
+        </HoverCard>
         <span>{row.original.product.name}</span>
       </div>
     ),
@@ -90,19 +117,13 @@ function OrderInfo() {
 
   const [order, setOrder] = useState<IOrder | null>(null);
 
+  const { orders, handleAssignCourier, handleCancelOrder, handleAdvanceOrder } =
+    useContext(OrderContext);
   const { couriers } = useContext(CourierContext);
 
-  function assignCourier(orderId: number | string, courier: ICourier) {
-    api
-      .patch(`/orders/${orderId}/courier/${courier.id}`)
-      .then(() => setOrder({ ...order!, courier }));
-  }
-
-  useQuery("orderById", async () => {
-    const response = await api.get(`orders/${id}`);
-    setOrder(response.data);
-    return response;
-  });
+  useEffect(() => {
+    setOrder(orders.find((order) => order.id === Number(id))!);
+  }, [id, order, orders]);
 
   return order ? (
     <div className="h-full w-full rounded-lg border flex flex-col">
@@ -115,8 +136,89 @@ function OrderInfo() {
               </Link>
             </Button>
             <h1 className="text-3xl font-bold">Pedido nº {order.id}</h1>
-            {/* TODO: create stepper for order status */}
           </div>
+          {/* TODO: create stepper for order status */}
+          {order.status !== "CANCELED" ? (
+            <>
+              <OrderStepper status={order.status} />
+              {order.status !== "DELIVERED" && (
+                <div className="flex gap-4">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="flex gap-2 flex-1"
+                      >
+                        <Ban className="size-4" />
+                        <span>Cancelar pedido</span>
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Você tem certeza?</DialogTitle>{" "}
+                        <DialogDescription>
+                          <strong>Cancelar o pedido</strong> é uma ação que não
+                          pode ser desfeita. Deseja realmente cancelar o pedido
+                          <strong> {String(order.id).padStart(4, "0")}</strong>?
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button variant="ghost" type="button">
+                            Voltar
+                          </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            onClick={() => handleCancelOrder(order.id)}
+                            variant="destructive"
+                            type="button"
+                          >
+                            Confirmar
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="flex gap-2 flex-1">
+                        <span>Avançar</span>
+                        <ArrowRight className="" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Avançar pedido</DialogTitle>
+                        <DialogDescription>
+                          Deseja avançar o pedido{" "}
+                          <strong>{String(order.id).padStart(4, "0")}</strong>{" "}
+                          para a próxima etapa?
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="flex gap-4">
+                        <DialogClose asChild>
+                          <Button variant="ghost" type="button">
+                            Voltar
+                          </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            onClick={() => handleAdvanceOrder(order.id)}
+                            type="button"
+                          >
+                            Avançar
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
+            </>
+          ) : (
+            <h1>Pedido cancelado</h1>
+          )}
         </div>
         <div className="flex-1 p-4 flex flex-col gap-4">
           <h1 className="text-3xl font-bold">Informações</h1>
@@ -184,7 +286,7 @@ function OrderInfo() {
                     {couriers.map((courier: ICourier) => (
                       <DropdownMenuItem
                         key={courier.id}
-                        onClick={() => assignCourier(order.id, courier)}
+                        onClick={() => handleAssignCourier(order.id, courier)}
                         className="cursor-pointer"
                       >
                         <strong>{courier.name}</strong>&nbsp;-&nbsp;
@@ -198,11 +300,12 @@ function OrderInfo() {
           </div>
         </div>
       </div>
-      <div className="flex-1 flex">
+      <div className="h-[420px] flex">
         <div className="p-4 gap-4 flex flex-col flex-1 border-r">
           <h1 className="text-3xl font-bold">Itens do pedido</h1>
-          {/* TODO: put DataTable in a ScrollArea */}
-          <DataTable columns={columns} data={order.items} />
+          <ScrollArea>
+            <DataTable columns={columns} data={order.items} />
+          </ScrollArea>
         </div>
         <div className="h-full w-96 flex flex-col gap-4 p-4">
           <h1 className="text-3xl font-bold">Pagamento</h1>

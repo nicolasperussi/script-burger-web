@@ -17,6 +17,7 @@ import CourierProvider from "./lib/context/couriers-context";
 import { PrivateRoutes } from "./lib/routes/private-routes";
 import { AuthenticationRoutes } from "./lib/routes/authentication-routes";
 import OrderInfo from "./pages/order-info";
+import OrderProvider from "./lib/context/orders-context";
 
 const router = createBrowserRouter([
   {
@@ -66,9 +67,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <CourierProvider>
-        <RouterProvider router={router} />
-      </CourierProvider>
+      <OrderProvider>
+        <CourierProvider>
+          <RouterProvider router={router} />
+        </CourierProvider>
+      </OrderProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

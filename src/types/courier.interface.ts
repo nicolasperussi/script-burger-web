@@ -1,7 +1,7 @@
 import { IOrder } from "./order.interface";
 
 export interface ICourier {
-  id: string | number;
+  id: number;
   name: string;
   email: string;
   phone: string;
