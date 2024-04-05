@@ -16,6 +16,7 @@ import { queryClient } from "./lib/query-client";
 import CourierProvider from "./lib/context/couriers-context";
 import { PrivateRoutes } from "./lib/routes/private-routes";
 import { AuthenticationRoutes } from "./lib/routes/authentication-routes";
+import OrderInfo from "./pages/order-info";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
           {
             path: "orders",
             element: <Orders />,
+          },
+          {
+            path: "order/:id",
+            element: <OrderInfo />,
           },
           {
             path: "products",

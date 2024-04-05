@@ -10,7 +10,14 @@ import ptBR from "dayjs/locale/pt-br";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2, MoreHorizontal, Plus, Trash } from "lucide-react";
+import {
+  ArrowRight,
+  Loader2,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash,
+} from "lucide-react";
 import { useQuery } from "react-query";
 import { api } from "@/lib/api";
 import { twMerge } from "tailwind-merge";
@@ -35,6 +42,7 @@ import {
 import { useContext, useState } from "react";
 import { CourierContext } from "@/lib/context/couriers-context";
 import { ICourier } from "@/types/courier.interface";
+import { Link } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
@@ -54,6 +62,16 @@ interface IColumnOrder {
 }
 
 const columns: ColumnDef<IColumnOrder>[] = [
+  {
+    id: "info",
+    cell: ({ row }) => (
+      <Button asChild variant="outline">
+        <Link to={`/order/${row.original.id}`}>
+          <Search className="size-4" />
+        </Link>
+      </Button>
+    ),
+  },
   {
     accessorKey: "id",
     header: "ID",
@@ -77,7 +95,7 @@ const columns: ColumnDef<IColumnOrder>[] = [
     header: "Horário",
     cell: ({ row }) => {
       const date = dayjs(row.getValue("moment"));
-      const minuteDifference = date.diff(new Date(), "minute");
+      const minuteDifference = dayjs().diff(date, "minute");
 
       if (minuteDifference > 5) return date.calendar();
       return date.fromNow();
@@ -143,7 +161,7 @@ const columns: ColumnDef<IColumnOrder>[] = [
 
       return !courier ? (
         <DropdownMenu>
-          <DropdownMenuTrigger className="w-full">
+          <DropdownMenuTrigger asChild className="w-full">
             <Button variant="outline" className="w-full">
               <Plus className="size-4" />
             </Button>
@@ -153,6 +171,7 @@ const columns: ColumnDef<IColumnOrder>[] = [
             <DropdownMenuSeparator />
             {couriers.map((courier: ICourier) => (
               <DropdownMenuItem
+                key={courier.id}
                 onClick={() => order.assignCourier(courier)}
                 className="cursor-pointer"
               >
