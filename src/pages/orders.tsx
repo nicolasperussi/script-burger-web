@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { BRL, getOrderStatus } from "@/lib/utils";
 import { IOrder } from "@/types/order.interface";
 
@@ -31,7 +32,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CourierContext } from "@/lib/context/couriers-context";
+import { ICourier } from "@/types/courier.interface";
 
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
@@ -47,6 +50,7 @@ interface IColumnOrder {
   courier: string;
   cancelOrder: () => void;
   advanceOrder: () => void;
+  assignCourier: (courier: ICourier) => void;
 }
 
 const columns: ColumnDef<IColumnOrder>[] = [
@@ -87,7 +91,7 @@ const columns: ColumnDef<IColumnOrder>[] = [
       const status = getOrderStatus(row.getValue("status"));
 
       return (
-        <div className="flex items-center w-">
+        <div className="flex items-center">
           <div className="flex gap-2 items-center flex-1">
             <span
               className={twMerge("size-3 rounded-full", status.color)}
@@ -95,7 +99,7 @@ const columns: ColumnDef<IColumnOrder>[] = [
             <span>{status.display}</span>
           </div>
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button variant="outline" className="flex gap-2 right-5">
                 <span>Avançar</span>
                 <ArrowRight className="" />
@@ -135,11 +139,29 @@ const columns: ColumnDef<IColumnOrder>[] = [
       const order = row.original;
       const courier = order.courier;
 
-      // TODO: Add dropdown to fetch courier and assign them to order
+      const { couriers } = useContext(CourierContext);
+
       return !courier ? (
-        <Button variant="outline" className="w-full">
-          <Plus className="size-4" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-full">
+            <Button variant="outline" className="w-full">
+              <Plus className="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Atribuir entregador</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {couriers.map((courier: ICourier) => (
+              <DropdownMenuItem
+                onClick={() => order.assignCourier(courier)}
+                className="cursor-pointer"
+              >
+                <strong>{courier.name}</strong>&nbsp;-&nbsp;
+                {courier.licensePlate}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         courier
       );
@@ -257,6 +279,18 @@ function Orders() {
     );
   }
 
+  function assignCourier(orderId: number | string, courier: ICourier) {
+    api
+      .patch(`/orders/${orderId}/courier/${courier.id}`)
+      .then(() =>
+        setOrders(
+          orders.map((order: IOrder) =>
+            order.id === orderId ? { ...order, courier } : order
+          )
+        )
+      );
+  }
+
   return (
     <div className="flex flex-col w-full gap-4 h-full">
       <h1 className="text-3xl font-bold">Pedidos</h1>
@@ -282,6 +316,8 @@ function Orders() {
                     courier: order.courier?.name,
                     cancelOrder: () => cancelOrder(order.id),
                     advanceOrder: () => advanceOrder(order.id),
+                    assignCourier: (courier: ICourier) =>
+                      assignCourier(order.id, courier),
                   })
                 )
               : []
