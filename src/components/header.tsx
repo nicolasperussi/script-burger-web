@@ -12,8 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { logout } from "@/lib/auth";
+import { useContext } from "react";
+import { OrderContext } from "@/lib/context/orders-context";
 
 function Header() {
+  const { orders } = useContext(OrderContext);
+
   return (
     <header className="w-full h-14 border-b border-border">
       <div className="container flex h-14 max-w-screen-2xl items-center gap-8">
@@ -36,7 +40,16 @@ function Header() {
         </div>
         <nav className="flex gap-4 lg:gap-6 flex-1">
           <NavLink to="/">Dashboard</NavLink>
-          <NavLink to="/orders">Pedidos</NavLink>
+          <NavLink to="/orders">
+            Pedidos{" "}
+            {orders &&
+              orders.filter((order) => order.status === "WAITING").length >
+                0 && (
+                <span className="text-xs size-4 absolute -top-2 -right-4 grid place-content-center rounded-full bg-foreground text-background">
+                  {orders.filter((order) => order.status === "WAITING").length}
+                </span>
+              )}
+          </NavLink>
           <NavLink to="/products">Produtos</NavLink>
           <NavLink to="/chat">Mensagens</NavLink>
           <NavLink to="/couriers">Entregadores</NavLink>

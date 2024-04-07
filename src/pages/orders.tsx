@@ -10,14 +10,7 @@ import ptBR from "dayjs/locale/pt-br";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Loader2,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash,
-} from "lucide-react";
+import { ArrowRight, MoreHorizontal, Plus, Search, Trash } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import {
   DropdownMenu,
@@ -115,36 +108,38 @@ const columns: ColumnDef<IColumnOrder>[] = [
             ></span>
             <span>{status.display}</span>
           </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="flex gap-2 right-5">
-                <span>Avançar</span>
-                <ArrowRight className="" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Avançar pedido</DialogTitle>
-                <DialogDescription>
-                  Deseja avançar o pedido{" "}
-                  <strong>{String(order.id).padStart(4, "0")}</strong> para a
-                  próxima etapa?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="flex gap-4">
-                <DialogClose asChild>
-                  <Button variant="ghost" type="button">
-                    Voltar
-                  </Button>
-                </DialogClose>
-                <DialogClose asChild>
-                  <Button onClick={order.advanceOrder} type="button">
-                    Avançar
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          {order.status !== "DELIVERED" && order.status !== "CANCELED" && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex gap-2 right-5">
+                  <span>Avançar</span>
+                  <ArrowRight className="" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Avançar pedido</DialogTitle>
+                  <DialogDescription>
+                    Deseja avançar o pedido{" "}
+                    <strong>{String(order.id).padStart(4, "0")}</strong> para a
+                    próxima etapa?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="flex gap-4">
+                  <DialogClose asChild>
+                    <Button variant="ghost" type="button">
+                      Voltar
+                    </Button>
+                  </DialogClose>
+                  <DialogClose asChild>
+                    <Button onClick={order.advanceOrder} type="button">
+                      Avançar
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       );
     },
@@ -255,13 +250,8 @@ const columns: ColumnDef<IColumnOrder>[] = [
 ];
 
 function Orders() {
-  const {
-    orders,
-    isFetchingOrders,
-    handleAdvanceOrder,
-    handleCancelOrder,
-    handleAssignCourier,
-  } = useContext(OrderContext);
+  const { orders, handleAdvanceOrder, handleCancelOrder, handleAssignCourier } =
+    useContext(OrderContext);
 
   return (
     <div className="flex flex-col w-full gap-4 h-full">
@@ -269,37 +259,34 @@ function Orders() {
       <div className="flex gap-3">
         <span>Filtros:</span>
       </div>
-      {!isFetchingOrders ? (
-        <DataTable
-          columns={columns}
-          data={
-            orders
-              ? orders.map(
-                  (order: IOrder): IColumnOrder => ({
-                    id: order.id,
-                    client: order.client.name,
-                    products:
-                      order.items.length > 1
-                        ? `${order.items.length} produtos`
-                        : `${order.items.length} produto`,
-                    totalPrice: order.totalPrice,
-                    moment: new Date(order.moment),
-                    status: order.status,
-                    courier: order.courier?.name,
-                    cancelOrder: () => handleCancelOrder(order.id),
-                    advanceOrder: () => handleAdvanceOrder(order.id),
-                    assignCourier: (courier: ICourier) =>
-                      handleAssignCourier(order.id, courier),
-                  })
-                )
-              : []
-          }
-        />
-      ) : (
-        <div className="grid place-items-center w-full h-full">
-          <Loader2 className="size-32 animate-spin text-border" />
-        </div>
-      )}
+      {/* TODO: create method to remove courier from order (backend too) */}
+      {/* TODO: create pagination */}
+      {/* TODO: create sorting and filtering (searching) */}
+      <DataTable
+        columns={columns}
+        data={
+          orders
+            ? orders.map(
+                (order: IOrder): IColumnOrder => ({
+                  id: order.id,
+                  client: order.client.name,
+                  products:
+                    order.items.length > 1
+                      ? `${order.items.length} produtos`
+                      : `${order.items.length} produto`,
+                  totalPrice: order.totalPrice,
+                  moment: new Date(order.moment),
+                  status: order.status,
+                  courier: order.courier?.name,
+                  cancelOrder: () => handleCancelOrder(order.id),
+                  advanceOrder: () => handleAdvanceOrder(order.id),
+                  assignCourier: (courier: ICourier) =>
+                    handleAssignCourier(order.id, courier),
+                })
+              )
+            : []
+        }
+      />
     </div>
   );
 }

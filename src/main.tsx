@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
@@ -65,13 +64,11 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  <OrderProvider>
     <QueryClientProvider client={queryClient}>
-      <OrderProvider>
-        <CourierProvider>
-          <RouterProvider router={router} />
-        </CourierProvider>
-      </OrderProvider>
+      <CourierProvider>
+        <RouterProvider router={router} />
+      </CourierProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </OrderProvider>
 );

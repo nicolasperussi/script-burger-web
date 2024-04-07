@@ -1,5 +1,12 @@
+import { Button } from "@/components/ui/button";
+import { seed } from "@/lib/seed";
+
 function Dashboard() {
-  return <h1>Dashboard</h1>;
+  return (
+    <div>
+      <Button onClick={() => seed()}>Seed database</Button>
+    </div>
+  );
 }
 
 export default Dashboard;

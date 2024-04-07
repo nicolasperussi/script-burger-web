@@ -75,7 +75,7 @@ const columns: ColumnDef<{
 }>[] = [
   {
     accessorKey: "name",
-    header: "Nome",
+    header: "Produto",
     cell: ({ row }) => (
       <div className="flex gap-4 items-center">
         <HoverCard>
@@ -137,7 +137,6 @@ function OrderInfo() {
             </Button>
             <h1 className="text-3xl font-bold">Pedido nº {order.id}</h1>
           </div>
-          {/* TODO: create stepper for order status */}
           {order.status !== "CANCELED" ? (
             <>
               <OrderStepper status={order.status} />
@@ -217,7 +216,14 @@ function OrderInfo() {
               )}
             </>
           ) : (
-            <h1>Pedido cancelado</h1>
+            <div className="flex-1 flex flex-col justify-center items-center gap-4">
+              <div className="size-24 rounded-full relative grid place-content-center z-10 bg-red-500">
+                <Ban className="size-12 text-red-100" />
+              </div>
+              <span className="text-red-500 font-medium">
+                Pedido cancelado!
+              </span>
+            </div>
           )}
         </div>
         <div className="flex-1 p-4 flex flex-col gap-4">
@@ -266,6 +272,7 @@ function OrderInfo() {
                 <Truck className="size-6" />
                 <span className="font-medium">Entregador</span>
               </div>
+              {/* TODO: create method to remove courier from order (backend too) */}
               {order.courier ? (
                 <span className="flex flex-1 items-center px-4">
                   {order.courier.name} - {order.courier.licensePlate}

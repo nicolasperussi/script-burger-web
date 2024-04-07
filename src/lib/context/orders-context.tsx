@@ -1,12 +1,13 @@
 import { IOrder } from "@/types/order.interface";
-import { ReactNode, createContext, useState } from "react";
-import { useQuery } from "react-query";
+import { ReactNode, createContext, useEffect, useState } from "react";
 import { api } from "../api";
 import { ICourier } from "@/types/courier.interface";
 
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+
 interface OrderContextType {
   orders: Array<IOrder>;
-  isFetchingOrders: boolean;
   handleSetOrders(orders: Array<IOrder>): void;
   handleAdvanceOrder(orderId: number): void;
   handleCancelOrder(orderId: number): void;
@@ -15,7 +16,6 @@ interface OrderContextType {
 
 export const OrderContext = createContext<OrderContextType>({
   orders: [],
-  isFetchingOrders: true,
   handleSetOrders: (): void => {},
   handleAdvanceOrder: (): void => {},
   handleCancelOrder: (): void => {},
@@ -28,11 +28,36 @@ interface OrderProviderProps {
 
 export default function OrderProvider({ children }: OrderProviderProps) {
   const [orders, setOrders] = useState<Array<IOrder>>([]);
-  const { isFetching } = useQuery("orders", async () => {
+
+  async function fetchOrders() {
     const response = await api.get("orders");
     setOrders(response.data);
-    return response.data;
-  });
+  }
+
+  useEffect(() => {
+    fetchOrders();
+    const socket = new SockJS("http://localhost:3003/scriptburger-ws");
+    const stompClient = Stomp.over(socket);
+    // Check if WebSocket is already open
+    stompClient.connect({}, () => {
+      console.log("Connected to WebSocket");
+      const stompSubscription = stompClient.subscribe(
+        "/topic/orders",
+        (message) => {
+          // Handle received messages
+          setOrders((prevOrders) => [JSON.parse(message.body), ...prevOrders]);
+        }
+      );
+
+      // Return the unsubscribe function from the subscribe call
+      return () => {
+        stompSubscription.unsubscribe();
+        stompClient.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+        });
+      };
+    });
+  }, []);
 
   function handleSetOrders(orders: Array<IOrder>) {
     setOrders(orders);
@@ -87,7 +112,6 @@ export default function OrderProvider({ children }: OrderProviderProps) {
     <OrderContext.Provider
       value={{
         orders,
-        isFetchingOrders: isFetching,
         handleSetOrders,
         handleAdvanceOrder,
         handleCancelOrder,

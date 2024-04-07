@@ -12,7 +12,7 @@ function ProductList(props: ProductListProps) {
         return (
           <div
             key={product.id}
-            className="cursor-pointer flex flex-col gap-4 hover:scale-105 transition-transform duration-150"
+            className="cursor-pointer flex w-48 flex-col gap-4 hover:scale-105 transition-transform duration-150"
           >
             <img
               className="size-48 rounded-lg object-cover"
@@ -20,8 +20,8 @@ function ProductList(props: ProductListProps) {
               alt=""
             />
             <div className="flex flex-col">
-              <h1 className="text-foreground/80">{product.name}</h1>
-              <h2 className="text-lg font-semibold">{BRL(product.price)}</h2>
+              <h1 className="text-sm text-foreground/80">{product.name}</h1>
+              <h2 className="font-semibold">{BRL(product.price)}</h2>
             </div>
           </div>
         );

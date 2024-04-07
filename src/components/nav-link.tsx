@@ -13,7 +13,7 @@ function NavLink(props: NavLinkProps) {
     <Link
       {...props}
       className={twMerge(
-        "text-sm hover:text-foreground/80 cursor-pointer transition-colors duration-150 delay-0",
+        "text-sm hover:text-foreground/80 cursor-pointer transition-colors duration-150 delay-0 relative",
         isActive ? "text-foreground" : "text-foreground/50",
         props.className
       )}

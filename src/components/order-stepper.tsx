@@ -15,7 +15,10 @@ function OrderStepper({ status }: OrderStepperProps) {
         const Icon = getOrderStatus(step).icon;
 
         return (
-          <div className="flex flex-col gap-4 items-center w-1/4 relative">
+          <div
+            key={step}
+            className="flex flex-col gap-4 items-center w-1/4 relative"
+          >
             {i !== steps.length - 1 && steps.indexOf(status) >= i && (
               <span
                 className={twMerge(
