@@ -311,7 +311,11 @@ function OrderInfo() {
         <div className="p-4 gap-4 flex flex-col flex-1 border-r">
           <h1 className="text-3xl font-bold">Itens do pedido</h1>
           <ScrollArea>
-            <DataTable columns={columns} data={order.items} />
+            <DataTable
+              columns={columns}
+              data={order.items}
+              showPagination={false}
+            />
           </ScrollArea>
         </div>
         <div className="h-full w-96 flex flex-col gap-4 p-4">

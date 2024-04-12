@@ -10,7 +10,15 @@ import ptBR from "dayjs/locale/pt-br";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MoreHorizontal, Plus, Search, Trash } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUp,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash,
+} from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import {
   DropdownMenu,
@@ -30,11 +38,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useContext } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { CourierContext } from "@/lib/context/couriers-context";
 import { ICourier } from "@/types/courier.interface";
 import { Link } from "react-router-dom";
 import { OrderContext } from "@/lib/context/orders-context";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 dayjs.extend(relativeTime);
 dayjs.extend(calendar);
@@ -79,12 +97,42 @@ const columns: ColumnDef<IColumnOrder>[] = [
   },
   {
     accessorKey: "totalPrice",
-    header: "Valor do pedido",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Valor do pedido
+          {column.getIsSorted() === "desc" && (
+            <ArrowUp className="size-4 ml-2" />
+          )}
+          {column.getIsSorted() === "asc" && (
+            <ArrowDown className="size-4 ml-2" />
+          )}
+        </Button>
+      );
+    },
     cell: ({ row }) => BRL(parseFloat(row.getValue("totalPrice"))),
   },
   {
     accessorKey: "moment",
-    header: "Horário",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Horário
+          {column.getIsSorted() === "desc" && (
+            <ArrowUp className="size-4 ml-2" />
+          )}
+          {column.getIsSorted() === "asc" && (
+            <ArrowDown className="size-4 ml-2" />
+          )}
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const date = dayjs(row.getValue("moment"));
       const minuteDifference = dayjs().diff(date, "minute");
@@ -253,37 +301,76 @@ function Orders() {
   const { orders, handleAdvanceOrder, handleCancelOrder, handleAssignCourier } =
     useContext(OrderContext);
 
+  const [clientFilter, setClientFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const handleClientFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setClientFilter(event.target.value);
+  };
+
+  const handleStatusFilterChange = (value: string) => {
+    if (value === "DEFAULT") return setStatusFilter("");
+    return setStatusFilter(value);
+  };
+
   return (
     <div className="flex flex-col w-full gap-4 h-full">
       <h1 className="text-3xl font-bold">Pedidos</h1>
-      <div className="flex gap-3">
+      <div className="flex gap-3 items-center">
         <span>Filtros:</span>
+        <Input
+          onChange={handleClientFilterChange}
+          placeholder="Pesquisar clientes..."
+          className="max-w-xs"
+        />
+        <Select defaultValue="DEFAULT" onValueChange={handleStatusFilterChange}>
+          <SelectTrigger className="ml-auto max-w-40">
+            <SelectValue placeholder="Status do pedido" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              <SelectItem value="DEFAULT">Qualquer status</SelectItem>
+              <SelectItem value="WAITING">Pendente</SelectItem>
+              <SelectItem value="IN_PRODUCTION">Em preparo</SelectItem>
+              <SelectItem value="IN_TRANSIT">Em trânsito</SelectItem>
+              <SelectItem value="DELIVERED">Entregue</SelectItem>
+              <SelectItem value="CANCELED">Cancelado</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
-      {/* TODO: create method to remove courier from order (backend too) */}
-      {/* TODO: create pagination */}
-      {/* TODO: create sorting and filtering (searching) */}
       <DataTable
         columns={columns}
         data={
           orders
-            ? orders.map(
-                (order: IOrder): IColumnOrder => ({
-                  id: order.id,
-                  client: order.client.name,
-                  products:
-                    order.items.length > 1
-                      ? `${order.items.length} produtos`
-                      : `${order.items.length} produto`,
-                  totalPrice: order.totalPrice,
-                  moment: new Date(order.moment),
-                  status: order.status,
-                  courier: order.courier?.name,
-                  cancelOrder: () => handleCancelOrder(order.id),
-                  advanceOrder: () => handleAdvanceOrder(order.id),
-                  assignCourier: (courier: ICourier) =>
-                    handleAssignCourier(order.id, courier),
-                })
-              )
+            ? orders
+                .filter((order) =>
+                  order.client.name
+                    .toLowerCase()
+                    .includes(clientFilter.toLowerCase())
+                )
+                .filter((order) =>
+                  statusFilter ? order.status === statusFilter : true
+                )
+                .map(
+                  (order: IOrder): IColumnOrder => ({
+                    id: order.id,
+                    client: order.client.name,
+                    products:
+                      order.items.length > 1
+                        ? `${order.items.length} produtos`
+                        : `${order.items.length} produto`,
+                    totalPrice: order.totalPrice,
+                    moment: new Date(order.moment),
+                    status: order.status,
+                    courier: order.courier?.name,
+                    cancelOrder: () => handleCancelOrder(order.id),
+                    advanceOrder: () => handleAdvanceOrder(order.id),
+                    assignCourier: (courier: ICourier) =>
+                      handleAssignCourier(order.id, courier),
+                  })
+                )
             : []
         }
       />

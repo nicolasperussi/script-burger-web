@@ -1,9 +1,8 @@
 import ProductList from "@/components/product-list";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { IProduct } from "@/types/product.interface";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useQuery } from "react-query";
 
 function Products() {
@@ -25,10 +24,10 @@ function Products() {
           </TabsList>
 
           {/* TODO: add a dialog to create new product */}
-          <Button className="ml-auto flex gap-2">
+          {/* <Button className="ml-auto flex gap-2">
             <Plus className="size-4" />
             <span>Novo Produto</span>
-          </Button>
+          </Button> */}
         </div>
         {!isFetching ? (
           products && (

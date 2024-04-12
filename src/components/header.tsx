@@ -45,7 +45,7 @@ function Header() {
             {orders &&
               orders.filter((order) => order.status === "WAITING").length >
                 0 && (
-                <span className="text-xs size-4 absolute -top-2 -right-4 grid place-content-center rounded-full bg-foreground text-background">
+                <span className="text-xs h-4 min-w-4 p-1 absolute -top-2 -right-4 grid place-content-center rounded-full bg-foreground text-background">
                   {orders.filter((order) => order.status === "WAITING").length}
                 </span>
               )}
